@@ -7,12 +7,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
@@ -20,17 +22,14 @@ import com.cts.model.Order;
 
 public class RWExcelOrder {
 
-	File file;
+	String filePath = "./src/main/resources/excel/order.xlsx";
 
-	public RWExcelOrder() {
-		file = new File("./src/main/resources/excel/order.xlsx");
-	}
-
-	public List<Order> readExcel(String inputFilePath) {
+	public List<Order> readExcel() {
 		FileInputStream fileInputStream = null;
 		ArrayList<Order> orderList = null;
 		try {
 			fileInputStream = new FileInputStream(new File("./src/main/resources/excel/order.xlsx"));
+			File file = new File(filePath);
 			XSSFWorkbook workbook = new XSSFWorkbook(file);
 			XSSFSheet sheet = workbook.getSheetAt(0);
 			orderList = new ArrayList<>();
@@ -40,8 +39,8 @@ public class RWExcelOrder {
 				for (int j = ro.getFirstCellNum(); j <= ro.getLastCellNum(); j++) {
 					Cell ce = ro.getCell(j);
 					if (j == 0) {
-						int tempId = (int) ce.getNumericCellValue();
-						order.setOrderId(tempId + "");
+						String tempId = ce.getStringCellValue();
+						order.setOrderId(tempId);
 					}
 					if (j == 1) {
 						order.setProdId(ce.getStringCellValue());
@@ -52,7 +51,11 @@ public class RWExcelOrder {
 					if (j == 3) {
 						order.setOrderDate(ce.getStringCellValue());
 					}
+					if (j == 4) {
+						order.setStatus(ce.getStringCellValue());
+					}
 				}
+				orderList.add(order);
 			}
 			return orderList;
 		} catch (Exception e) {
@@ -101,6 +104,9 @@ public class RWExcelOrder {
 
 		Cell cell4 = row.createCell(cellnum++);
 		cell4.setCellValue(order.getProdId());
+
+		Cell cell5 = row.createCell(cellnum++);
+		cell5.setCellValue(order.getProdId());
 		try {
 			FileOutputStream out = new FileOutputStream(file);
 			workbook.write(out);
@@ -112,53 +118,53 @@ public class RWExcelOrder {
 		}
 	}
 
-	public Order cancelOrder(String orderId) {
-		FileInputStream fileInputStream = null;
-		Order order = null;
+	public void cancelOrder(String orderId) {
+		int removeRowIndex = 0;
 		try {
-			fileInputStream = new FileInputStream(new File("./src/main/resources/excel/order.xlsx"));
-			XSSFWorkbook workbook = new XSSFWorkbook(file);
-			XSSFSheet sheet = workbook.getSheetAt(0);
-			for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
-				order = new Order();
-				Row ro = sheet.getRow(i);
-				for (int j = ro.getFirstCellNum(); j <= ro.getLastCellNum(); j++) {
-					Cell ce = ro.getCell(j);
-					if (j == 0) {
-						String tempId = ce.getStringCellValue();
-						order.setOrderId(tempId + "");
+			FileInputStream excelFile = new FileInputStream(new File("./src/main/resources/excel/order.xlsx"));
+			Workbook workbook = new XSSFWorkbook(excelFile);
+			Sheet sheet = workbook.getSheetAt(0);
+			Iterator<Row> iterator = sheet.iterator();
+			while (iterator.hasNext()) {
+				Row currentRow = iterator.next();
+				Iterator<Cell> cellIterator = currentRow.iterator();
+				while (cellIterator.hasNext()) {
+					Cell currentCell = cellIterator.next();
+					int columnIndex = currentCell.getColumnIndex();
+					int rowIndex = currentCell.getRowIndex();
+					if (rowIndex >= 0) {
+						if (columnIndex == 0 && currentCell.getStringCellValue().equalsIgnoreCase(orderId)) {
+							removeRowIndex = rowIndex;
+						}
 					}
-					if (j == 1) {
-						order.setProdId(ce.getStringCellValue());
-					}
-					if (j == 2) {
-						order.setUserID(ce.getStringCellValue());
-					}
-					if (j == 3) {
-						order.setOrderDate(ce.getStringCellValue());
-					}
-				}
-				if (order.getOrderId().equalsIgnoreCase(orderId)) {
-					 sheet.removeRow(ro);
-					 File outWB = new File("order.xlsx");
-				        OutputStream out = new FileOutputStream(outWB);
-				        workbook.write(out);
-				        out.flush();
-				        out.close();
-					break;
 				}
 			}
-		} catch (Exception e) {
+			removeOrder(sheet, removeRowIndex);
+			File outFile = new File(filePath);
+			OutputStream out = new FileOutputStream(outFile);
+			workbook.write(out);
+			out.flush();
+			out.close();
+
+		} catch (FileNotFoundException e) {
 			e.printStackTrace();
-		} finally {
-			try {
-				
-				fileInputStream.close();
-			} catch (IOException e) {
-				e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	private void removeOrder(Sheet sheet, int rowIndex) {
+		int lastRowNum = sheet.getLastRowNum();
+		if (rowIndex >= 0 && rowIndex < lastRowNum) {
+			sheet.shiftRows(rowIndex + 1, lastRowNum, -1);
+		}
+		if (rowIndex == lastRowNum) {
+			Row removingRow = sheet.getRow(rowIndex);
+			if (removingRow != null) {
+				sheet.removeRow(removingRow);
 			}
 		}
-		return order;
 	}
+
 
 }
