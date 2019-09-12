@@ -105,6 +105,7 @@ public class RWExcelOrder {
 		Cell cell5 = row.createCell(cellnum++);
 		cell5.setCellValue(order.getProdId());
 		try {
+			file = new File("./src/main/resources/excel/order.xlsx");
 			FileOutputStream out = new FileOutputStream(file);
 			workbook.write(out);
 			out.close();

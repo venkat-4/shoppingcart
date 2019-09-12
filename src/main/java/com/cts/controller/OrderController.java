@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cts.exception.InternalServerError;
+import com.cts.exception.RecordNotFoundException;
 import com.cts.model.Order;
 import com.cts.service.OrderService;
 
@@ -23,13 +25,13 @@ public class OrderController {
 	private OrderService orderService;
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@PutMapping("/")
+	@PutMapping(value = "/")
 	public ResponseEntity<Object> placeOrder(@RequestBody Order order) {
 		Order savedOrder = orderService.placeOrder(order);
 		if(savedOrder != null) {
 			return new ResponseEntity("Order placed successfully", HttpStatus.OK);
 		} else {
-			return new ResponseEntity("Unable to place order", HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new InternalServerError("Internal Server error occurred");
 		}
 	}
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -37,7 +39,7 @@ public class OrderController {
 	public ResponseEntity<Object> cancelOrder(@PathVariable("orderId") String orderId) {
 		Order order = orderService.cancelOrder(orderId);
 		if(order == null) {
-			return new ResponseEntity("Order not found in the system", HttpStatus.NOT_FOUND);
+			throw new RecordNotFoundException("Order not founf, orderId-"+orderId);
 		} else {
 			return new ResponseEntity("Order with orderId "+order.getOrderId()+" cancelled", HttpStatus.OK);
 		}
@@ -46,7 +48,15 @@ public class OrderController {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping(value = "/")
 	public ResponseEntity<List<Order>> getAllOrders() {
-		List<Order> orders = orderService.getAllOrders();
+		List<Order> orders = null;
+		try {
+			orders = orderService.getAllOrders();
+		} catch (Exception e) {
+			throw new RecordNotFoundException("No record found");
+		}
+		if(orders == null || orders.isEmpty()) {
+			throw new RecordNotFoundException("No record found");
+		}
 		return new ResponseEntity(orders, HttpStatus.OK);
 	}
 
