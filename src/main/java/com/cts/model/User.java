@@ -2,16 +2,16 @@ package com.cts.model;
 
 public class User {
 	
-	private int userId;
+	private String userId;
 	private String firstName;
 	private String lastName;
 	private String password;
 
-	public int getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(int userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 

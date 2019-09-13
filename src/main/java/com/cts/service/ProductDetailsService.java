@@ -16,7 +16,7 @@ public class ProductDetailsService {
 
 	public String addItem(Product pro) {
 		String a = repo.addItem(pro);
-		return a;
+		return a+" with product Id:"+pro.getProdId();
 	}
 	public void removeItem(int id){
 		repo.removeItem(id);

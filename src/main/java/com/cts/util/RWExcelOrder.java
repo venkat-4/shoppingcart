@@ -10,7 +10,6 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -18,9 +17,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Component;
 
 import com.cts.model.Order;
 
+@Component
 public class RWExcelOrder {
 
 	String filePath = "./src/main/resources/excel/order.xlsx";
@@ -174,5 +175,48 @@ public class RWExcelOrder {
 		return order;
 	}
 
+	public String writeOrderExcel(Order placeOrder) {
+
+		int cellnum = 0;
+		File file = new File("./src/main/resources/excel/order.xlsx");
+		XSSFWorkbook workbook = null;
+		XSSFSheet sheet = null;
+		int rownum = 0;
+		if (file.exists() == false) {
+			workbook = new XSSFWorkbook();
+			System.out.println("coming inside if");
+			sheet = workbook.createSheet("User Order Details");
+		} else {
+			System.out.println("coming in else");
+			try (InputStream is = new FileInputStream(file)) {
+				workbook = new XSSFWorkbook(is);
+				sheet = workbook.getSheetAt(0);
+				rownum = sheet.getLastRowNum() + 1;
+			} catch (FileNotFoundException e) {
+				System.err.println("File not found");
+			} catch (IOException e) {
+				System.err.println("Input/Output exception happened");
+			}
+		}
+		System.out.println("coming inside else");
+		Row row = sheet.createRow(rownum++);
+		Cell cell = row.createCell(cellnum++);
+		cell.setCellValue(placeOrder.getOrderId());
+		Cell cell2 = row.createCell(cellnum++);
+		cell2.setCellValue(placeOrder.getProdId());
+		Cell cell3 = row.createCell(cellnum++);
+		cell3.setCellValue(placeOrder.getUserID());
+		Cell cell4 = row.createCell(cellnum++);
+		cell4.setCellValue(placeOrder.getOrderDate());
+		try {
+			FileOutputStream out = new FileOutputStream(file);
+			workbook.write(out);
+			out.close();
+			return "User Order Placed Successfully!!!The user with ID => "+ placeOrder.getUserID() + " has placed the Order with ID =>" + placeOrder.getOrderId() + " having the prodcut with ID => "+ placeOrder.getProdId();
+		} catch (Exception e) {
+			e.printStackTrace();
+			return "Internal Server Error";
+		}
+	}
 
 }

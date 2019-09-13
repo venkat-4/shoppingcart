@@ -30,5 +30,9 @@ public class OrderService {
 	public Order getOrderById(String orderId) {
 		return orderRepository.getOrderById(orderId);
 	}
-
+	
+	public String save(Order placeOrder) {
+		return orderRepository.save(placeOrder);
+	}
+	
 }

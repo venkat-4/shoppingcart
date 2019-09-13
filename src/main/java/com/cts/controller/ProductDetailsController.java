@@ -2,6 +2,8 @@ package com.cts.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,10 +13,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.cts.model.Order;
 import com.cts.model.Product;
+import com.cts.service.OrderService;
 import com.cts.service.ProductDetailsService;
 
 @RestController
@@ -23,6 +27,9 @@ public class ProductDetailsController {
 
 	@Autowired
 	private ProductDetailsService serv;
+	
+	@Autowired
+	private OrderService orderService;
 
 	@PostMapping
 	public String addItem(@RequestBody Product product) {
@@ -51,5 +58,10 @@ public class ProductDetailsController {
 		} else {
 			return new ResponseEntity(product, HttpStatus.OK);
 		}
+	}
+	@RequestMapping(value ="/orders",method = RequestMethod.POST)
+	public ResponseEntity<String> save(@Valid @RequestBody Order order) {
+		String response= orderService.save(order);
+		return ResponseEntity.status(HttpStatus.CREATED).body(response);
 	}
 }

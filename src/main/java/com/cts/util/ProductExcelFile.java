@@ -26,7 +26,7 @@ public class ProductExcelFile {
 	File file;
 
 	public ProductExcelFile() {
-		rownum = 0;
+		//rownum = 0;
 		cellnum = 0;
 		file = new File("./src/main/resources/excel/product.xlsx");
 	}
@@ -36,9 +36,9 @@ public class ProductExcelFile {
 
 		XSSFSheet sheet = workbook.createSheet("Item Details");
 
-		int rownum = 0;
-
-		Row row = sheet.createRow(rownum++);
+		 rownum = sheet.getLastRowNum();
+		 
+		Row row = sheet.createRow(++rownum);
 
 		Cell cell = row.createCell(cellnum++);
 
