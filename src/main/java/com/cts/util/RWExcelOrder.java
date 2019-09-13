@@ -104,6 +104,7 @@ public class RWExcelOrder {
 		cell4.setCellValue(order.getOrderDate());
 		
 		try {
+			file = new File("./src/main/resources/excel/order.xlsx");
 			FileOutputStream out = new FileOutputStream(file);
 			workbook.write(out);
 			out.close();
