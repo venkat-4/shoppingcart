@@ -14,55 +14,45 @@ import com.cts.model.User;
 
 @RestController
 public class BuyProductController {
-	
+
 	private RestTemplate template;
-	
-	
+
 	@RequestMapping(value = "/placeorder", method = RequestMethod.POST)
-	public String placeOrder(@RequestBody User user){
-		
+	public String placeOrder(@RequestBody User user) {
+
 		String userId = "";
 		String productId = "";
 		template = new RestTemplate();
-		
+
 		String response = template.postForObject("http://localhost:9090/auth/login", user, String.class);
-		System.out.println(response);
-		
-		String[] arr =  response.split(":");
-		if(arr.length >=1){
-			userId=(String)Array.get(arr, 1);
+
+		String[] arr = response.split(":");
+		if (arr.length >= 1) {
+			userId = (String) Array.get(arr, 1);
 		}
 		Product product = new Product();
 		product.setProdId("102");
 		product.setProdName("nokia");
 		product.setPrice("999");
 		String productResponse = template.postForObject("http://localhost:9090/products", product, String.class);
-		
-		
-		
-		String[] productarr =  productResponse.split(":");
-		if(productarr.length >=1){
-			productId=(String)Array.get(productarr, 1);
+
+		String[] productarr = productResponse.split(":");
+		if (productarr.length >= 1) {
+			productId = (String) Array.get(productarr, 1);
 		}
-		
-		
-		Product getProduct = template.getForObject("http://localhost:9090/products/"+productId, Product.class);
-	
-		System.out.println(getProduct.getProdName());
-		
-		
+
+		Product getProduct = template.getForObject("http://localhost:9090/products/" + productId, Product.class);
+
 		Order order = new Order();
 		order.setUserID(userId);
 		order.setOrderDate("2019-Sep-13");
 		order.setOrderId("od-856429");
-		order.setProdId(productId);
-		
+		order.setProdId(getProduct.getProdId());
+
 		String orderResponse = template.postForObject("http://localhost:9090/products/orders", order, String.class);
-		System.out.println("Order Response "+orderResponse);
-		/*HttpEntity<User> request = new HttpEntity<>(user);
-		ResponseEntity<User> res = template.exchange("http://localhost:8080/auth/login", HttpMethod.POST, request, User.class);*/
+
 		return orderResponse;
-		
+
 	}
 
 }

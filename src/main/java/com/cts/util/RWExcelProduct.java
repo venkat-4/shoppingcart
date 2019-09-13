@@ -18,12 +18,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.web.client.RestTemplate;
+import org.springframework.stereotype.Component;
 
-import com.cts.model.Order;
 import com.cts.model.Product;
-import com.cts.model.User;
 
+@Component
 public class RWExcelProduct {
 
 	

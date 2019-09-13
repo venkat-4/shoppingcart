@@ -2,6 +2,7 @@ package com.cts.repository;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.cts.model.Product;
@@ -13,24 +14,25 @@ public class ProductDetailssRepo {
 
 	//String filePath = "./src/main/resources/excel/product.xlsx";
 
+	@Autowired
+	private ProductExcelFile productExcelFile;
+	
+	@Autowired
+	private RWExcelProduct rwExcelProduct;
+	
 	public String addItem(Product pro) {
-		ProductExcelFile productExcelFile = new ProductExcelFile();
-		String response = productExcelFile.addItemInExcel(pro);
-		return response;
+		return  productExcelFile.addItemInExcel("./src/main/resources/excel/product.xlsx",pro);
 	}
 
 	public void removeItem(int id) {
-		ProductExcelFile productExcelFile = new ProductExcelFile();
 		productExcelFile.removeItemFromExcel("./src/main/resources/excel/product.xlsx", id);
 	}
 
 	public List<Product> getAllProducts() {
-		RWExcelProduct rwExcelProduct = new RWExcelProduct();
 		return rwExcelProduct.getAllProducts();
 	}
 
 	public Product getProductById(String productId) {
-		RWExcelProduct rwExcelProduct = new RWExcelProduct();
 		return rwExcelProduct.getProductById(productId);
 	}
 

@@ -14,11 +14,12 @@ import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.stereotype.Component;
 
 import com.cts.model.Product;
 
+@Component
 public class ProductExcelFile {
 
 	private int rownum;
@@ -26,39 +27,42 @@ public class ProductExcelFile {
 	File file;
 
 	public ProductExcelFile() {
-		//rownum = 0;
 		cellnum = 0;
 		file = new File("./src/main/resources/excel/product.xlsx");
 	}
 
-	public String addItemInExcel(Product pro) {
-		XSSFWorkbook workbook = new XSSFWorkbook();
-
-		XSSFSheet sheet = workbook.createSheet("Item Details");
-
-		 rownum = sheet.getLastRowNum();
-		 
-		Row row = sheet.createRow(++rownum);
-
-		Cell cell = row.createCell(cellnum++);
-
-		cell.setCellValue(pro.getProdId());
-
-		Cell cell2 = row.createCell(cellnum++);
-		cell2.setCellValue(pro.getProdName());
-
-		Cell cell3 = row.createCell(cellnum++);
-		cell3.setCellValue(pro.getPrice());
+	public String addItemInExcel(String fileName,Product pro) {
+		
 		try {
-			FileOutputStream out = new FileOutputStream(file);
+			FileInputStream fileInput = new FileInputStream(new File(fileName));
+			Workbook workbook = new XSSFWorkbook(fileInput);
+			Sheet sheet = workbook.getSheetAt(0);
+			rownum = sheet.getLastRowNum();
+
+			cellnum = 0;
+
+			Row row = sheet.createRow(++rownum);
+
+			Cell cell = row.createCell(cellnum++);
+
+			cell.setCellValue(pro.getProdId());
+
+			Cell cell2 = row.createCell(cellnum++);
+			cell2.setCellValue(pro.getProdName());
+
+			Cell cell3 = row.createCell(cellnum++);
+			cell3.setCellValue(pro.getPrice());
+
+			FileOutputStream out = new FileOutputStream(new File(fileName));
 			workbook.write(out);
 			out.close();
-			return "Item added Successfully";
-		} catch (Exception e) {
+			return "Product Added Successfully,Product Id:  "+pro.getProdId();
+
+		} catch (IOException e) {
 			e.printStackTrace();
 			return "Internal Server Error";
 		}
-	}
+		}
 
 	public void removeItemFromExcel(String inputFilePath, int id) {
 
