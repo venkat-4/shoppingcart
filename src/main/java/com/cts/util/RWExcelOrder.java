@@ -51,9 +51,6 @@ public class RWExcelOrder {
 					if (j == 3) {
 						order.setOrderDate(ce.getStringCellValue());
 					}
-					if (j == 4) {
-						order.setStatus(ce.getStringCellValue());
-					}
 				}
 				orderList.add(order);
 			}
