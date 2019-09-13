@@ -27,4 +27,9 @@ public class OrderRepository {
 		RWExcelOrder rwExcelOrder = new RWExcelOrder();
 		return rwExcelOrder.readExcel();
 	}
+
+	public Order getOrderById(String orderId) {
+		RWExcelOrder rwExcelOrder = new RWExcelOrder();
+		return rwExcelOrder.getOrderById(orderId);
+	}
 }

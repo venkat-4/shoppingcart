@@ -15,13 +15,16 @@ public class ProductDetailsService {
 	ProductDetailssRepo repo;
 
 	public String addItem(Product pro) {
-		String a = repo.addItemInExcel(pro);
+		String a = repo.addItem(pro);
 		return a;
 	}
 	public void removeItem(int id){
-		repo.removeItemFromExcel("./src/main/resources/excel/product.xlsx", id);
+		repo.removeItem(id);
 	}
 	public List<Product> getAllProducts() {
 		return repo.getAllProducts();
+	}
+	public Product getProductById(String productId) {
+		return repo.getProductById(productId);
 	}
 }

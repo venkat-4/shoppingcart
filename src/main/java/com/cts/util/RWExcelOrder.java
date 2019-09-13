@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -33,14 +34,14 @@ public class RWExcelOrder {
 			XSSFWorkbook workbook = new XSSFWorkbook(file);
 			XSSFSheet sheet = workbook.getSheetAt(0);
 			orderList = new ArrayList<>();
-			for (int i = sheet.getFirstRowNum() + 1; i <= sheet.getLastRowNum(); i++) {
+			for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
 				Order order = new Order();
 				Row ro = sheet.getRow(i);
 				for (int j = ro.getFirstCellNum(); j <= ro.getLastCellNum(); j++) {
 					Cell ce = ro.getCell(j);
 					if (j == 0) {
-						String tempId = ce.getStringCellValue();
-						order.setOrderId(tempId);
+						String orderId = ce.getStringCellValue();
+						order.setOrderId(orderId);
 					}
 					if (j == 1) {
 						order.setProdId(ce.getStringCellValue());
@@ -94,16 +95,14 @@ public class RWExcelOrder {
 		cell.setCellValue(order.getOrderId());
 
 		Cell cell2 = row.createCell(cellnum++);
-		cell2.setCellValue(order.getOrderDate());
+		cell2.setCellValue(order.getUserID());
 
 		Cell cell3 = row.createCell(cellnum++);
-		cell3.setCellValue(order.getUserID());
-
+		cell3.setCellValue(order.getProdId());
+		
 		Cell cell4 = row.createCell(cellnum++);
-		cell4.setCellValue(order.getProdId());
-
-		Cell cell5 = row.createCell(cellnum++);
-		cell5.setCellValue(order.getProdId());
+		cell4.setCellValue(order.getOrderDate());
+		
 		try {
 			FileOutputStream out = new FileOutputStream(file);
 			workbook.write(out);
@@ -161,6 +160,17 @@ public class RWExcelOrder {
 				sheet.removeRow(removingRow);
 			}
 		}
+	}
+
+	public Order getOrderById(String orderId) {
+		List<Order> orders = readExcel();
+		Order order = null;
+		for(Order o : orders) {
+			if(o.getOrderId().equalsIgnoreCase(orderId)) {
+				order = o;
+			}
+		}
+		return order;
 	}
 
 

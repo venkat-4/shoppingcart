@@ -27,4 +27,8 @@ public class OrderService {
 		return orderRepository.getAllOrders();
 	}
 
+	public Order getOrderById(String orderId) {
+		return orderRepository.getOrderById(orderId);
+	}
+
 }

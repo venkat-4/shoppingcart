@@ -24,7 +24,7 @@ public class ProductDetailsController {
 	@Autowired
 	private ProductDetailsService serv;
 
-	@PostMapping(path = "/")
+	@PostMapping
 	public String addItem(@RequestBody Product product) {
 		String a = serv.addItem(product);
 		return a;
@@ -36,9 +36,20 @@ public class ProductDetailsController {
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	@GetMapping(path="/")
+	@GetMapping
 	public ResponseEntity<List<Product>> getAllProducts() {
 		List<Product> products = serv.getAllProducts();
 		return new ResponseEntity(products, HttpStatus.OK);
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@GetMapping("/{prodId}")
+	public ResponseEntity<Product> getProductById(@PathVariable("prodId") String prodId) {
+		Product product = serv.getProductById(prodId);
+		if (product == null) {
+			return new ResponseEntity("Product not found", HttpStatus.NOT_FOUND);
+		} else {
+			return new ResponseEntity(product, HttpStatus.OK);
+		}
 	}
 }
