@@ -3,15 +3,15 @@ package com.cts.model;
 
 public class Product {
 	
-	private int prodId;
+	private String prodId;
 	private String prodName;
-	private double price;
+	private String price;
 
-	public int getProdId() {
+	public String getProdId() {
 		return prodId;
 	}
 
-	public void setProdId(int prodId) {
+	public void setProdId(String prodId) {
 		this.prodId = prodId;
 	}
 
@@ -23,12 +23,17 @@ public class Product {
 		this.prodName = prodName;
 	}
 
-	public double getPrice() {
+	public String getPrice() {
 		return price;
 	}
 
-	public void setPrice(double price) {
+	public void setPrice(String price) {
 		this.price = price;
+	}
+
+	@Override
+	public String toString() {
+		return "Product [prodId=" + prodId + ", prodName=" + prodName + ", price=" + price + "]";
 	}
 
 }
