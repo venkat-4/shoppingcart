@@ -26,6 +26,9 @@ public class BuyProductController {
 
 		String response = template.postForObject("http://localhost:9090/auth/login", user, String.class);
 
+		if(response.contains("invalid")){
+			return response; 
+		}
 		String[] arr = response.split(":");
 		if (arr.length >= 1) {
 			userId = (String) Array.get(arr, 1);
