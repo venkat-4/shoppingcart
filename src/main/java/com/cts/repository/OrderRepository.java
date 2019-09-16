@@ -19,9 +19,8 @@ public class OrderRepository {
 		
 	}
 
-	public Order cancelOrder(String orderId) {
-		rWExcelOrder.cancelOrder(orderId);
-		return new Order();
+	public String cancelOrder(String orderId) {
+		return rWExcelOrder.cancelOrder(orderId);
 	}
 
 	public List<Order> getAllOrders() {

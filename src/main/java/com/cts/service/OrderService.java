@@ -19,7 +19,7 @@ public class OrderService {
 		
 	}
 
-	public Order cancelOrder(String orderId) {
+	public String cancelOrder(String orderId) {
 		return orderRepository.cancelOrder(orderId);
 	}
 

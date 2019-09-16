@@ -116,8 +116,9 @@ public class RWExcelOrder {
 		}
 	}
 
-	public void cancelOrder(String orderId) {
+	public String cancelOrder(String orderId) {
 		int removeRowIndex = 0;
+		String cancelledOrderId = null;
 		try {
 			FileInputStream excelFile = new FileInputStream(new File("./src/main/resources/excel/order.xlsx"));
 			Workbook workbook = new XSSFWorkbook(excelFile);
@@ -133,6 +134,7 @@ public class RWExcelOrder {
 					if (rowIndex >= 0) {
 						if (columnIndex == 0 && currentCell.getStringCellValue().equalsIgnoreCase(orderId)) {
 							removeRowIndex = rowIndex;
+							cancelledOrderId = orderId;
 						}
 					}
 				}
@@ -149,6 +151,7 @@ public class RWExcelOrder {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return cancelledOrderId;
 	}
 
 	private void removeOrder(Sheet sheet, int rowIndex) {
