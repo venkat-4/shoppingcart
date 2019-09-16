@@ -49,7 +49,6 @@ public class BuyProductControllerTest {
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-		System.out.println(result.getResponse());
 		String expected = "User Order Placed Successfully!!!The user with ID => user101 has placed the Order with ID =>od-856429 having the prodcut with ID => 102";
 		assertEquals(expected, result.getResponse().getContentAsString());
 	}
