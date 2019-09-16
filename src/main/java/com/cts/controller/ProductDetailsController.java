@@ -37,9 +37,15 @@ public class ProductDetailsController {
 		return a;
 	}
 	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@DeleteMapping(path="/{prodId}")
-	public String removeItem(@PathVariable("prodId")String prodId){
-		return serv.removeItem(prodId);
+	public ResponseEntity<String> removeItem(@PathVariable("prodId")String prodId){
+		String proId = serv.removeItem(prodId);
+		if (proId == null) {
+			return new ResponseEntity("Product not found in the system", HttpStatus.NOT_FOUND);
+		} else {
+			return new ResponseEntity("Product with prodId : " + prodId + " removed successfully", HttpStatus.OK);
+		}
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
