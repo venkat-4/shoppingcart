@@ -87,13 +87,12 @@ public class ProductExcelFile {
 					if (rowIndex >= 0) {
 						if (columnIndex == 0 && currentCell.getStringCellValue().equals(id)) {
 							removeRowIndex = rowIndex;
+							aa = id;
 						}
 					}
 				}
-				System.out.println();
-
 			}
-			aa = removeRow(datatypeSheet, removeRowIndex);
+			removeRow(datatypeSheet, removeRowIndex);
 			File outWB = new File(inputFilePath);
 			OutputStream out = new FileOutputStream(outWB);
 			workbook.write(out);
