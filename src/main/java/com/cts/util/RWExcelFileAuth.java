@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -18,10 +20,12 @@ import com.cts.model.User;
 
 @Component
 public class RWExcelFileAuth {
-
+	
+	private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	private int rownum;
 	private int cellnum;
 
+	@SuppressWarnings("resource")
 	public String readExcel(User user, String inputFilePath) {
 
 		String response = "";
@@ -69,12 +73,10 @@ public class RWExcelFileAuth {
 					}
 
 				}
-				System.out.println();
-
 			}
 			return response;
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.INFO, e.getLocalizedMessage());
 			return "Internal server error";
 		}
 
@@ -111,7 +113,7 @@ public class RWExcelFileAuth {
 			return "User Registered Successfully";
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.INFO, e.getLocalizedMessage());
 			return "Internal Server Error";
 		}
 
