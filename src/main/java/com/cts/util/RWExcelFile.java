@@ -7,6 +7,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellType;
@@ -21,6 +23,7 @@ import com.cts.model.User;
 
 public class RWExcelFile {
 
+	private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	private int rownum;
 	private int cellnum;
 	File file ;
@@ -49,7 +52,7 @@ public class RWExcelFile {
 
 					Cell currentCell = cellIterator.next();
 					if (currentCell.getCellTypeEnum() == CellType.STRING) {
-						System.out.print(currentCell.getStringCellValue() + "--");
+						logger.info(currentCell.getStringCellValue() + "--");
 						int columnIndex = currentCell.getColumnIndex();
 						int rowIndex = currentCell.getRowIndex();
 						if (rowIndex > 0) {
@@ -108,17 +111,14 @@ public class RWExcelFile {
 							}
 						}
 					} else if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
-						System.out.print(currentCell.getNumericCellValue() + "--");
+						logger.log(Level.INFO, currentCell.getNumericCellValue() + "--");
 					}
-
 				}
-				System.out.println();
-
 			}
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.log(Level.WARNING, "FileNotFoundException:"+e.getLocalizedMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.WARNING, "FileNotFoundException:"+e.getLocalizedMessage());
 		}
 
 	}
