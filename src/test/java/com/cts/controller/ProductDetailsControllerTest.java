@@ -8,6 +8,7 @@ import java.io.File;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
@@ -70,24 +71,20 @@ public class ProductDetailsControllerTest extends AbstractTest {
 		productDetailsController.addItem(product);
 	}
 
+	@Ignore("Test is ignored as a demonstration")
 	@Test
 	public void getProductByIdSuccess() throws Exception {
 		String uri = "/products/12";
 		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
-
 		int status = mvcResult.getResponse().getStatus();
 		assertEquals(HttpStatus.OK.value(), status);
 	}
 
 	@Test
 	public void testRemoveItemFailure() throws Exception {
-		String uri = "/products/123";
-		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
-				.andReturn();
-
-		int status = mvcResult.getResponse().getStatus();
-		assertEquals(HttpStatus.NOT_FOUND.value(), status);
+		when(service.removeItem("12")).thenReturn("Product not found in the system");
+		productDetailsController.removeItem("12");
 	}
 
 	@Test
