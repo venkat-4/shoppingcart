@@ -99,8 +99,6 @@ public class TestNGProductController {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
-		
-		String response = restTemplate.getForObject(url, String.class);
 		Product[] prodList = restTemplate.getForObject(url, Product[].class);
 	    List<Product> pList= Arrays.asList(prodList);
 	    

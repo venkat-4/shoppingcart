@@ -4,11 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -18,10 +20,13 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.client.RestTemplate;
 
 import com.cts.model.Order;
-import com.cts.repository.OrderRepository;
 import com.cts.repository.ProductDetailssRepo;
 import com.cts.service.OrderService;
 import com.cts.util.RWExcelOrder;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class OrderControllerTest extends AbstractTest {
 
@@ -117,10 +122,17 @@ public class OrderControllerTest extends AbstractTest {
 		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
 
-		int status = mvcResult.getResponse().getStatus();
-		assertEquals(200, status);
 		String content = mvcResult.getResponse().getContentAsString();
-		assertTrue(content.length() == 2);
+		List<Order> orders = getOrderListFromString(content);
+		assertEquals(200, mvcResult.getResponse().getStatus());
+		assertTrue(orders.size() > 0);
+	}
+
+	private List<Order> getOrderListFromString(String content)
+			throws JsonParseException, JsonMappingException, IOException {
+		ObjectMapper mapper = new ObjectMapper();
+		List<Order> orderList = mapper.readValue(content, new TypeReference<List<Order>>() {});
+		return orderList;
 	}
 
 	@Test

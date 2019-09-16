@@ -1,16 +1,14 @@
 package com.cts.controller;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
 import java.io.File;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MvcResult;
@@ -35,12 +33,18 @@ public class ProductDetailsControllerTest extends AbstractTest {
 	@Mock
 	private ProductDetailssRepo productDetailssRepo;
 
+	@Before
+	@Override
+	public void setUp() {
+		super.setUp();
+	}
+	
 	@Test
 	public void testAddItem() {
 		File file;
 		file = new File("./src/main/resources/excel/product.xlsx");
 		Product product = new Product();
-		product.setProdId("1");
+		product.setProdId("123");
 		product.setProdName("TV");
 		product.setPrice("1000");
 		String Response = "Item added Successfully";
@@ -50,22 +54,19 @@ public class ProductDetailsControllerTest extends AbstractTest {
 
 	@Test
 	public void getProductByIdSuccess() throws Exception {
-		String uri = "/products/123";
+		String uri = "/products/102";
 		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
-
 		int status = mvcResult.getResponse().getStatus();
 		assertEquals(HttpStatus.OK.value(), status);
 	}
 
 	@Test
 	public void testRemoveItemFailure() throws Exception {
-		String uri = "/products/123";
+		String uri = "/products/107";
 		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
 				.andReturn();
-
 		int status = mvcResult.getResponse().getStatus();
 		assertEquals(HttpStatus.NOT_FOUND.value(), status);
 	}
-
 }
