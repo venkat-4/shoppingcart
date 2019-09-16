@@ -1,6 +1,5 @@
 package com.cts.util;
 
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -31,8 +30,8 @@ public class ProductExcelFile {
 		file = new File("./src/main/resources/excel/product.xlsx");
 	}
 
-	public String addItemInExcel(String fileName,Product pro) {
-		
+	public String addItemInExcel(String fileName, Product pro) {
+
 		try {
 			FileInputStream fileInput = new FileInputStream(new File(fileName));
 			Workbook workbook = new XSSFWorkbook(fileInput);
@@ -56,16 +55,16 @@ public class ProductExcelFile {
 			FileOutputStream out = new FileOutputStream(new File(fileName));
 			workbook.write(out);
 			out.close();
-			return "Product Added Successfully,Product Id:  "+pro.getProdId();
+			return "Product Added Successfully,Product Id:  " + pro.getProdId();
 
 		} catch (IOException e) {
 			e.printStackTrace();
 			return "Internal Server Error";
 		}
-		}
+	}
 
-	public void removeItemFromExcel(String inputFilePath, int id) {
-
+	public String removeItemFromExcel(String inputFilePath, String id) {
+		String aa = null;
 		int removeRowIndex = 0;
 		try {
 
@@ -82,21 +81,19 @@ public class ProductExcelFile {
 				while (cellIterator.hasNext()) {
 
 					Cell currentCell = cellIterator.next();
-					if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
 
-						int columnIndex = currentCell.getColumnIndex();
-						int rowIndex = currentCell.getRowIndex();
-						if (rowIndex >= 0) {
-							if (columnIndex == 0 && currentCell.getNumericCellValue() == id) {
-								removeRowIndex = rowIndex;
-							}
+					int columnIndex = currentCell.getColumnIndex();
+					int rowIndex = currentCell.getRowIndex();
+					if (rowIndex >= 0) {
+						if (columnIndex == 0 && currentCell.getStringCellValue().equals(id)) {
+							removeRowIndex = rowIndex;
 						}
 					}
 				}
 				System.out.println();
 
 			}
-			removeRow(datatypeSheet, removeRowIndex);
+			aa = removeRow(datatypeSheet, removeRowIndex);
 			File outWB = new File(inputFilePath);
 			OutputStream out = new FileOutputStream(outWB);
 			workbook.write(out);
@@ -109,9 +106,11 @@ public class ProductExcelFile {
 			e.printStackTrace();
 		}
 
+		return aa;
 	}
 
-	public static void removeRow(Sheet sheet, int rowIndex) {
+	public String removeRow(Sheet sheet, int rowIndex) {
+
 		int lastRowNum = sheet.getLastRowNum();
 		if (rowIndex >= 0 && rowIndex < lastRowNum) {
 			sheet.shiftRows(rowIndex + 1, lastRowNum, -1);
@@ -122,5 +121,6 @@ public class ProductExcelFile {
 				sheet.removeRow(removingRow);
 			}
 		}
+		return "Deleted successfully";
 	}
 }

@@ -38,8 +38,8 @@ public class ProductDetailsController {
 	}
 	
 	@DeleteMapping(path="/{prodId}")
-	public void removeItem(@PathVariable("prodId")int prodId){
-		serv.removeItem(prodId);
+	public String removeItem(@PathVariable("prodId")String prodId){
+		return serv.removeItem(prodId);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

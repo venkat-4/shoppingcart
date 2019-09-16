@@ -24,8 +24,8 @@ public class ProductDetailssRepo {
 		return  productExcelFile.addItemInExcel("./src/main/resources/excel/product.xlsx",pro);
 	}
 
-	public void removeItem(int id) {
-		productExcelFile.removeItemFromExcel("./src/main/resources/excel/product.xlsx", id);
+	public String removeItem(String id) {
+		return productExcelFile.removeItemFromExcel("./src/main/resources/excel/product.xlsx", id);
 	}
 
 	public List<Product> getAllProducts() {

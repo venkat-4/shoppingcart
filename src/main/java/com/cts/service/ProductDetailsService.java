@@ -17,8 +17,8 @@ public class ProductDetailsService {
 	public String addItem(Product pro) {
 		return repo.addItem(pro);
 	}
-	public void removeItem(int id){
-		repo.removeItem(id);
+	public String removeItem(String id){
+		return repo.removeItem(id);
 	}
 	public List<Product> getAllProducts() {
 		return repo.getAllProducts();
