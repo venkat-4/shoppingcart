@@ -36,8 +36,8 @@ public class OrderController {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping(value = "/cancel/{orderId}")
 	public ResponseEntity<Object> cancelOrder(@PathVariable("orderId") String orderId) {
-		Order order = orderService.cancelOrder(orderId);
-		if (order == null) {
+		String cancelledOrderId = orderService.cancelOrder(orderId);
+		if (cancelledOrderId == null) {
 			return new ResponseEntity("Order not found in the system", HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity("Order with orderId : " + orderId + " cancelled successfully", HttpStatus.OK);
