@@ -31,10 +31,15 @@ public class ProductDetailsController {
 	@Autowired
 	private OrderService orderService;
 
+	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PostMapping
-	public String addItem(@RequestBody Product product) {
+	public ResponseEntity<String> addItem(@RequestBody Product product) {
 		String a = serv.addItem(product);
-		return a;
+		if(a.contains("Product Added")) {
+			return new ResponseEntity(a, HttpStatus.OK);
+		} else {
+			return new ResponseEntity(a, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })

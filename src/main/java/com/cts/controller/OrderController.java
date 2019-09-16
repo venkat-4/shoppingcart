@@ -56,7 +56,7 @@ public class OrderController {
 	public ResponseEntity<Order> getOrderById(@PathVariable("orderId") String orderId) {
 		Order order = orderService.getOrderById(orderId);
 		if (order == null) {
-			return new ResponseEntity("Order not found", HttpStatus.NOT_FOUND);
+			return new ResponseEntity(null, HttpStatus.NOT_FOUND);
 		} else {
 			return new ResponseEntity(order, HttpStatus.OK);
 		}
