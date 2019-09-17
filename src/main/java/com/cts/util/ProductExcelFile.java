@@ -1,3 +1,9 @@
+/**
+ * This class is used to get the product information.
+ * 
+ * @author 764432
+ *
+ */
 package com.cts.util;
 
 import java.io.File;
@@ -21,18 +27,30 @@ import com.cts.model.Product;
 
 @Component
 public class ProductExcelFile {
-	
-	private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
+	private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
 	private int rownum;
 	private int cellnum;
 	File file;
 
+	/**
+	 * This constructor is used to initialize File.
+	 * 
+	 * 
+	 */
 	public ProductExcelFile() {
 		cellnum = 0;
 		file = new File("./src/main/resources/excel/product.xlsx");
 	}
 
+	/**
+	 * This method is used for adding the product details into excel.
+	 * 
+	 * @param fileName
+	 * @param pro
+	 * @return
+	 */
 	@SuppressWarnings("resource")
 	public String addItemInExcel(String fileName, Product pro) {
 		String response = null;
@@ -62,14 +80,23 @@ public class ProductExcelFile {
 			response = "Product Added Successfully,Product Id:  " + pro.getProdId();
 
 		} catch (IOException e) {
-			logger.log(Level.INFO, e.getMessage());
+			LOGGER.log(Level.INFO, e.getMessage());
 			response = "Internal Server Error";
+
 		}
 		return response;
 	}
 
+	/**
+	 * This method is used for deleting a product item from excel.
+	 * 
+	 * 
+	 * @param inputFilePath
+	 * @param id
+	 * @return
+	 */
 	@SuppressWarnings("resource")
-	public String removeItemFromExcel(String inputFilePath, String id) {
+	public String removeItemFromExcel(String inputFilePath, String prodId) {
 		String removedProdId = null;
 		int removedRowIndex = 0;
 		try {
@@ -91,9 +118,9 @@ public class ProductExcelFile {
 					int columnIndex = currentCell.getColumnIndex();
 					int rowIndex = currentCell.getRowIndex();
 					if (rowIndex >= 0) {
-						if (columnIndex == 0 && currentCell.getStringCellValue().equals(id)) {
+						if (columnIndex == 0 && currentCell.getStringCellValue().equals(prodId)) {
 							removedRowIndex = rowIndex;
-							removedProdId = id;
+							removedProdId = prodId;
 						}
 					}
 				}

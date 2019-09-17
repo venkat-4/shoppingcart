@@ -1,3 +1,9 @@
+/**
+ * This class is used to place the order.
+ * 
+ * @author 764432
+ *
+ */
 package com.cts.controller;
 
 import java.lang.reflect.Array;
@@ -17,8 +23,14 @@ public class BuyProductController {
 
 	private RestTemplate template;
 
+	/**
+	 * This method is used for placing the order.
+	 * 
+	 * @param user
+	 * @return String
+	 */
 	@RequestMapping(value = "/placeorder", method = RequestMethod.POST)
-	public String placeOrder(@RequestBody User user) {
+	public String placeOrder(@RequestBody final User user) {
 
 		String userId = "";
 		String productId = "";
@@ -26,11 +38,12 @@ public class BuyProductController {
 
 		String response = template.postForObject("http://localhost:9090/auth/login", user, String.class);
 
-		if(response.contains("invalid")){
-			return response; 
+		if (response.contains("invalid")) {
+			return response;
 		}
 		String[] arr = response.split(":");
-		if (arr.length >= 1) {
+		final int one = 1;
+		if (arr.length >= one) {
 			userId = (String) Array.get(arr, 1);
 		}
 		Product product = new Product();
@@ -52,10 +65,9 @@ public class BuyProductController {
 		order.setOrderId("od-856429");
 		order.setProdId(getProduct.getProdId());
 
-		String orderResponse = template.postForObject("http://localhost:9090/products/orders", order, String.class);
+		final String orderResponse = template.postForObject("http://localhost:9090/products/orders", order,
+				String.class);
 
 		return orderResponse;
-
 	}
-
 }

@@ -1,19 +1,21 @@
 package com.cts.exception;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.testng.Assert.assertNotNull;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import static org.mockito.Mockito.when;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
-import static org.hamcrest.CoreMatchers.is;
-
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 @RunWith(SpringRunner.class)
@@ -22,49 +24,42 @@ public class CustomExceptionHandlerTest extends ResponseEntityExceptionHandler {
 	@Mock
 	public CustomExceptionHandler customExceptionHandler;
 
+	@Mock
+	WebRequest webRequest;
+
+	CustomExceptionHandler customExceptionHandlerReal;
+	@Mock
+	MethodArgumentNotValidException methodArgumentNotValidException;
+
 	ResponseEntity<Object> mockResponse;
 
 	@Before
 	public void setUp() {
 		mockResponse = null;
+		customExceptionHandlerReal = new CustomExceptionHandler();
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public void handleAllExceptionTest() {
-		mockResponse = new ResponseEntity(HttpStatus.INTERNAL_SERVER_ERROR);
-		when(customExceptionHandler.handleAllException(Mockito.any(Exception.class), Mockito.any()))
-				.thenReturn(mockResponse);
+		ResponseEntity<Object> res = customExceptionHandlerReal.handleAllException(new Exception(), webRequest);
 
-		ResponseEntity<Object> ErrorResponse = customExceptionHandler.handleAllException(new Exception("sadad"), null);
-		assertThat(ErrorResponse, notNullValue());
-		assertThat(ErrorResponse.getStatusCode(), is(HttpStatus.INTERNAL_SERVER_ERROR));
+		assertNotNull(res);
 	}
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@Test
 	public void handleInternalServerExceptionTest() {
-		mockResponse = new ResponseEntity(HttpStatus.NOT_FOUND);
-		when(customExceptionHandler.handleInternalServerException(Mockito.any(InternalServerError.class),
-				Mockito.any())).thenReturn(mockResponse);
+		ResponseEntity<Object> res = customExceptionHandlerReal
+				.handleInternalServerException(new InternalServerError("InternalServerException"), webRequest);
 
-		ResponseEntity<Object> ErrorResponse = customExceptionHandler
-				.handleInternalServerException(new InternalServerError("sadad"), null);
-		assertThat(ErrorResponse, notNullValue());
-		assertThat(ErrorResponse.getStatusCode(), is(HttpStatus.NOT_FOUND));
+		assertNotNull(res);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
 	public void handleRecordNotFoundExceptionTest() {
-		mockResponse = new ResponseEntity(HttpStatus.NOT_FOUND);
-		when(customExceptionHandler.handleRecordNotFoundException(Mockito.any(RecordNotFoundException.class),
-				Mockito.any())).thenReturn(mockResponse);
+		ResponseEntity<Object> res = customExceptionHandlerReal
+				.handleRecordNotFoundException(new RecordNotFoundException("RecordNotFoundException"), webRequest);
 
-		ResponseEntity<Object> ErrorResponse = customExceptionHandler
-				.handleRecordNotFoundException(new RecordNotFoundException(""), null);
-		assertThat(ErrorResponse, notNullValue());
-		assertThat(ErrorResponse.getStatusCode(), is(HttpStatus.NOT_FOUND));
+		assertNotNull(res);
 	}
 
 	@SuppressWarnings({ "rawtypes", "unchecked" })
@@ -79,4 +74,5 @@ public class CustomExceptionHandlerTest extends ResponseEntityExceptionHandler {
 		assertThat(ErrorResponse, notNullValue());
 		assertThat(ErrorResponse.getStatusCode(), is(HttpStatus.BAD_REQUEST));
 	}
+
 }
