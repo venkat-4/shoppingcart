@@ -11,6 +11,7 @@ public class ShoppingcartApplicationTests {
 
 	@Test
 	public void contextLoads() {
+		ShoppingcartApplication.main(new String[] {});
 	}
 
 }

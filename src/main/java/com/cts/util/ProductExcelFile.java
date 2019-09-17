@@ -35,7 +35,7 @@ public class ProductExcelFile {
 
 	@SuppressWarnings("resource")
 	public String addItemInExcel(String fileName, Product pro) {
-
+		String response = null;
 		try {
 			FileInputStream fileInput = new FileInputStream(new File(fileName));
 			Workbook workbook = new XSSFWorkbook(fileInput);
@@ -59,12 +59,13 @@ public class ProductExcelFile {
 			FileOutputStream out = new FileOutputStream(new File(fileName));
 			workbook.write(out);
 			out.close();
-			return "Product Added Successfully,Product Id:  " + pro.getProdId();
+			response = "Product Added Successfully,Product Id:  " + pro.getProdId();
 
 		} catch (IOException e) {
 			logger.log(Level.INFO, e.getMessage());
-			return "Internal Server Error";
+			response = "Internal Server Error";
 		}
+		return response;
 	}
 
 	@SuppressWarnings("resource")

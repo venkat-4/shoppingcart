@@ -44,4 +44,15 @@ public class AuthRepositoryTest {
 		String res = authRepository.createUser(user);
 		assertEquals(expected, res);
 	}
+	
+	@Test
+	public void loginTestFailure(){
+		User user = new User();
+		user.setUserId("user101");
+		user.setPassword("password");
+		when(rWExcelFileAuth.readExcel(user,"./src/main/resources/excel/user.xlsx")).thenReturn("");
+		String res = authRepository.login(user);
+		String expected = "invalid user details";
+		assertEquals(expected, res);
+	}
 }

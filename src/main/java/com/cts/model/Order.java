@@ -39,12 +39,4 @@ public class Order {
 		this.orderDate = orderDate;
 	}
 
-	@Override
-	public String toString() {
-		return "Order [orderId=" + orderId + ", prodId=" + prodId + ", userID=" + userID + ", orderDate=" + orderDate
-				+ "]";
-	}
-	
-	
-
 }

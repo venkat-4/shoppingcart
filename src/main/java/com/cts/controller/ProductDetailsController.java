@@ -35,7 +35,7 @@ public class ProductDetailsController {
 	@PostMapping
 	public ResponseEntity<String> addItem(@RequestBody Product product) {
 		String addItemResponse = productDetailsService.addItem(product);
-		if(addItemResponse.contains("Product Added")) {
+		if(addItemResponse != null) {
 			return new ResponseEntity(addItemResponse, HttpStatus.OK);
 		} else {
 			return new ResponseEntity(addItemResponse, HttpStatus.INTERNAL_SERVER_ERROR);

@@ -3,6 +3,7 @@ package com.cts.controller;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,6 +16,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.client.RestTemplate;
@@ -67,39 +69,16 @@ public class OrderControllerTest extends AbstractTest {
 
 	@Test
 	public void testCancelOrderSuccess() throws Exception {
-
-		String postUrl = "http://localhost:9090/orders";
-		RestTemplate restTemplate = new RestTemplate();
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_JSON);
-		Order order = new Order();
-		order.setOrderId("OR-123");
-		order.setOrderDate("2019-07-11");
-		order.setProdId("PROD-123");
-		order.setUserID("USR-123");
-		String inputJson = super.mapToJson(order);
-		HttpEntity<String> request = new HttpEntity<String>(inputJson, headers);
-		String response = restTemplate.postForObject(postUrl, request, String.class);
-		assertEquals(true, response.contains("Order placed successfully"));
-
-		String cancelUrl = "/orders/cancel/OR-123";
-		MvcResult mvcResult = mvc
-				.perform(MockMvcRequestBuilders.get(cancelUrl).accept(MediaType.APPLICATION_JSON_VALUE)).andReturn();
-		assertNotNull(mvcResult.getResponse());
-		int status = mvcResult.getResponse().getStatus();
-
-		assertEquals(HttpStatus.OK.value(), status);
-
+		when(orderService.cancelOrder("OR-321")).thenReturn(new String("Order cancelled successfully"));
+		ResponseEntity<Object> response = orderController.cancelOrder("OR-321");
+		assertEquals(HttpStatus.OK.value(), response.getStatusCodeValue());
 	}
 
 	@Test
 	public void testCancelOrderFailure() throws Exception {
-		String uri = "/orders/cancel/xyz123";
-		MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders.get(uri).accept(MediaType.APPLICATION_JSON_VALUE))
-				.andReturn();
-
-		int status = mvcResult.getResponse().getStatus();
-		assertEquals(HttpStatus.NOT_FOUND.value(), status);
+		when(orderService.cancelOrder("OR-321")).thenReturn(null);
+		ResponseEntity<Object> response = orderController.cancelOrder(null);
+		assertEquals(HttpStatus.NOT_FOUND.value(), response.getStatusCodeValue());
 	}
 
 	@Test
@@ -131,7 +110,8 @@ public class OrderControllerTest extends AbstractTest {
 	private List<Order> getOrderListFromString(String content)
 			throws JsonParseException, JsonMappingException, IOException {
 		ObjectMapper mapper = new ObjectMapper();
-		List<Order> orderList = mapper.readValue(content, new TypeReference<List<Order>>() {});
+		List<Order> orderList = mapper.readValue(content, new TypeReference<List<Order>>() {
+		});
 		return orderList;
 	}
 
@@ -167,6 +147,42 @@ public class OrderControllerTest extends AbstractTest {
 
 		int status = mvcResult.getResponse().getStatus();
 		assertEquals(HttpStatus.NOT_FOUND.value(), status);
+	}
+
+	@Test
+	public void testPlaceOrderSuccess() throws Exception {
+		Order order = new Order();
+		order.setOrderId("OR-321");
+		order.setOrderDate("2019-08-10");
+		order.setProdId("PROD-321");
+		order.setUserID("USR-321");
+		when(orderService.placeOrder(order)).thenReturn(order);
+		ResponseEntity<Object> response = orderController.placeOrder(order);
+		assertEquals(HttpStatus.OK.value(), response.getStatusCodeValue());
+	}
+
+	@Test
+	public void testPlaceOrderFailure() throws Exception {
+		Order order = new Order();
+		order.setOrderId("OR-321");
+		order.setOrderDate("2019-08-10");
+		order.setProdId("PROD-321");
+		order.setUserID("USR-321");
+		when(orderService.placeOrder(order)).thenReturn(order);
+		ResponseEntity<Object> response = orderController.placeOrder(null);
+		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR.value(), response.getStatusCodeValue());
+	}
+	
+	@Test
+	public void testGetOrderById() throws Exception {
+		Order order = new Order();
+		order.setOrderId("OR-321");
+		order.setOrderDate("2019-08-10");
+		order.setProdId("PROD-321");
+		order.setUserID("USR-321");
+		when(orderService.getOrderById("OR-321")).thenReturn(order);
+		ResponseEntity<Order> response = orderController.getOrderById("OR-321");
+		assertEquals(HttpStatus.OK.value(), response.getStatusCodeValue());
 	}
 
 }
