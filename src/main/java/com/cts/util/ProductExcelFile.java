@@ -7,9 +7,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellType;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -20,6 +21,8 @@ import com.cts.model.Product;
 
 @Component
 public class ProductExcelFile {
+	
+	private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 
 	private int rownum;
 	private int cellnum;
@@ -30,6 +33,7 @@ public class ProductExcelFile {
 		file = new File("./src/main/resources/excel/product.xlsx");
 	}
 
+	@SuppressWarnings("resource")
 	public String addItemInExcel(String fileName, Product pro) {
 
 		try {
@@ -58,20 +62,21 @@ public class ProductExcelFile {
 			return "Product Added Successfully,Product Id:  " + pro.getProdId();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.INFO, e.getMessage());
 			return "Internal Server Error";
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public String removeItemFromExcel(String inputFilePath, String id) {
-		String aa = null;
-		int removeRowIndex = 0;
+		String removedProdId = null;
+		int removedRowIndex = 0;
 		try {
 
-			FileInputStream excelFile = new FileInputStream(new File(inputFilePath));
-			Workbook workbook = new XSSFWorkbook(excelFile);
-			Sheet datatypeSheet = workbook.getSheetAt(0);
-			Iterator<Row> iterator = datatypeSheet.iterator();
+			FileInputStream fileInputStream = new FileInputStream(new File(inputFilePath));
+			Workbook workbook = new XSSFWorkbook(fileInputStream);
+			Sheet dataSheet = workbook.getSheetAt(0);
+			Iterator<Row> iterator = dataSheet.iterator();
 
 			while (iterator.hasNext()) {
 
@@ -86,26 +91,25 @@ public class ProductExcelFile {
 					int rowIndex = currentCell.getRowIndex();
 					if (rowIndex >= 0) {
 						if (columnIndex == 0 && currentCell.getStringCellValue().equals(id)) {
-							removeRowIndex = rowIndex;
-							aa = id;
+							removedRowIndex = rowIndex;
+							removedProdId = id;
 						}
 					}
 				}
 			}
-			removeRow(datatypeSheet, removeRowIndex);
-			File outWB = new File(inputFilePath);
-			OutputStream out = new FileOutputStream(outWB);
-			workbook.write(out);
-			out.flush();
-			out.close();
+			removeRow(dataSheet, removedRowIndex);
+			File file = new File(inputFilePath);
+			OutputStream outputStream = new FileOutputStream(file);
+			workbook.write(outputStream);
+			outputStream.flush();
+			outputStream.close();
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		return aa;
+		return removedProdId;
 	}
 
 	public String removeRow(Sheet sheet, int rowIndex) {

@@ -38,7 +38,6 @@ public class AuthControllerTest {
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
 
-		System.out.println(result.getResponse());
 		String expected = "User Looged in sucessfully with user Id:user101";
 		assertEquals(expected, result.getResponse().getContentAsString());
 	}
@@ -53,8 +52,6 @@ public class AuthControllerTest {
 				.accept(MediaType.APPLICATION_JSON).content(exampleCourseJson).contentType(MediaType.APPLICATION_JSON);
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-
-		System.out.println(result.getResponse());
 		String expected = "User Registered Successfully";
 		assertEquals(expected, result.getResponse().getContentAsString());
 	}

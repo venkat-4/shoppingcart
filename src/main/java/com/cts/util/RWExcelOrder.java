@@ -10,6 +10,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
@@ -24,6 +26,7 @@ import com.cts.model.Order;
 @Component
 public class RWExcelOrder {
 
+	private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	String filePath = "./src/main/resources/excel/order.xlsx";
 
 	public List<Order> readExcel() {
@@ -63,7 +66,7 @@ public class RWExcelOrder {
 			try {
 				fileInputStream.close();
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.log(Level.INFO, e.getMessage());
 			}
 		}
 		return orderList;
@@ -84,9 +87,9 @@ public class RWExcelOrder {
 				sheet = workbook.getSheetAt(0);
 				rownum = sheet.getLastRowNum() + 1;
 			} catch (FileNotFoundException e) {
-				System.err.println("File not found");
+				logger.log(Level.INFO, "File not found");
 			} catch (IOException e) {
-				System.err.println("Input/Output exception happened");
+				logger.log(Level.INFO, "Input/Output exception happened");
 			}
 		}
 
@@ -111,7 +114,7 @@ public class RWExcelOrder {
 			out.close();
 			return order;
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.INFO, e.getMessage());
 			return null;
 		}
 	}
@@ -147,9 +150,9 @@ public class RWExcelOrder {
 			out.close();
 
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.log(Level.INFO, e.getMessage());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.log(Level.INFO, e.getMessage());
 		}
 		return cancelledOrderId;
 	}
@@ -187,21 +190,21 @@ public class RWExcelOrder {
 		int rownum = 0;
 		if (file.exists() == false) {
 			workbook = new XSSFWorkbook();
-			System.out.println("coming inside if");
+			logger.log(Level.INFO, "coming inside if");
 			sheet = workbook.createSheet("User Order Details");
 		} else {
-			System.out.println("coming in else");
+			logger.log(Level.INFO, "coming in else");
 			try (InputStream is = new FileInputStream(file)) {
 				workbook = new XSSFWorkbook(is);
 				sheet = workbook.getSheetAt(0);
 				rownum = sheet.getLastRowNum() + 1;
 			} catch (FileNotFoundException e) {
-				System.err.println("File not found");
+				logger.log(Level.WARNING, "File not found");
 			} catch (IOException e) {
-				System.err.println("Input/Output exception happened");
+				logger.log(Level.WARNING, "Input/Output exception happened");
 			}
 		}
-		System.out.println("coming inside else");
+		logger.log(Level.INFO, "coming inside else");
 		Row row = sheet.createRow(rownum++);
 		Cell cell = row.createCell(cellnum++);
 		cell.setCellValue(placeOrder.getOrderId());
@@ -217,7 +220,7 @@ public class RWExcelOrder {
 			out.close();
 			return "User Order Placed Successfully!!!The user with ID => "+ placeOrder.getUserID() + " has placed the Order with ID =>" + placeOrder.getOrderId() + " having the prodcut with ID => "+ placeOrder.getProdId();
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.log(Level.WARNING, "Internal Server Error");
 			return "Internal Server Error";
 		}
 	}

@@ -18,7 +18,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@ExceptionHandler(Exception.class)
-	public final ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
+	public ResponseEntity<Object> handleAllException(Exception ex, WebRequest request) {
 		List<String> details = new ArrayList<>();
 		details.add(ex.getLocalizedMessage());
 		ErrorResponse error = new ErrorResponse("Server exception ocurred", details);
@@ -27,7 +27,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@ExceptionHandler(RecordNotFoundException.class)
-	public final ResponseEntity<Object> handleRecordNotFoundException(RecordNotFoundException ex, WebRequest request) {
+	public ResponseEntity<Object> handleRecordNotFoundException(RecordNotFoundException ex, WebRequest request) {
 		List<String> details = new ArrayList<>();
 		details.add(ex.getLocalizedMessage());
 		ErrorResponse error = new ErrorResponse("No record found", details);
@@ -37,7 +37,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@SuppressWarnings({ "unchecked", "rawtypes" })
 	@ExceptionHandler(InternalServerError.class)
-	public final ResponseEntity<Object> handleInternalServerException(InternalServerError ex, WebRequest request) {
+	public ResponseEntity<Object> handleInternalServerException(InternalServerError ex, WebRequest request) {
 		List<String> details = new ArrayList<>();
 		details.add(ex.getLocalizedMessage());
 		ErrorResponse error = new ErrorResponse("Record not found", details);

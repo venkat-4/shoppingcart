@@ -34,11 +34,11 @@ public class ProductDetailsController {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PostMapping
 	public ResponseEntity<String> addItem(@RequestBody Product product) {
-		String a = productDetailsService.addItem(product);
-		if(a.contains("Product Added")) {
-			return new ResponseEntity(a, HttpStatus.OK);
+		String addItemResponse = productDetailsService.addItem(product);
+		if(addItemResponse.contains("Product Added")) {
+			return new ResponseEntity(addItemResponse, HttpStatus.OK);
 		} else {
-			return new ResponseEntity(a, HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity(addItemResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 	
