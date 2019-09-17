@@ -1,3 +1,9 @@
+/**
+ * This class is used to get the Authenticated user information.
+ * 
+ * @author 764432
+ *
+ */
 package com.cts.util;
 
 import java.io.File;
@@ -20,11 +26,18 @@ import com.cts.model.User;
 
 @Component
 public class RWExcelFileAuth {
-	
-	private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+
+	private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	private int rownum;
 	private int cellnum;
 
+	/**
+	 * This method is used for reading the user information.
+	 * 
+	 * @param user
+	 * @param inputFilePath
+	 * @return
+	 */
 	@SuppressWarnings("resource")
 	public String readExcel(User user, String inputFilePath) {
 
@@ -76,12 +89,19 @@ public class RWExcelFileAuth {
 			}
 			return response;
 		} catch (IOException e) {
-			logger.log(Level.INFO, e.getLocalizedMessage());
+			LOGGER.log(Level.INFO, e.getLocalizedMessage());
 			return "Internal server error";
 		}
 
 	}
 
+	/**
+	 * This method is used for registering the user.
+	 * 
+	 * @param user
+	 * @param fileName
+	 * @return
+	 */
 	public String writeExcel(User user, String fileName) {
 
 		try {
@@ -113,7 +133,7 @@ public class RWExcelFileAuth {
 			return "User Registered Successfully";
 
 		} catch (IOException e) {
-			logger.log(Level.INFO, e.getLocalizedMessage());
+			LOGGER.log(Level.INFO, e.getLocalizedMessage());
 			return "Internal Server Error";
 		}
 

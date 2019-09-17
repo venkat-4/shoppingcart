@@ -1,3 +1,9 @@
+/**
+ * This class is used to get the order information.
+ * 
+ * @author 764432
+ *
+ */
 package com.cts.util;
 
 import java.io.File;
@@ -26,9 +32,15 @@ import com.cts.model.Order;
 @Component
 public class RWExcelOrder {
 
-	private static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	private static final Logger LOGGER = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 	String filePath = "./src/main/resources/excel/order.xlsx";
 
+	/**
+	 * This method is used for reading the excel value.
+	 * 
+	 * 
+	 * @return
+	 */
 	public List<Order> readExcel() {
 		FileInputStream fileInputStream = null;
 		ArrayList<Order> orderList = null;
@@ -66,12 +78,18 @@ public class RWExcelOrder {
 			try {
 				fileInputStream.close();
 			} catch (IOException e) {
-				logger.log(Level.INFO, e.getMessage());
+				LOGGER.log(Level.INFO, e.getMessage());
 			}
 		}
 		return orderList;
 	}
 
+	/**
+	 * This method is used for write the order item into excel.
+	 * 
+	 * @param order
+	 * @return
+	 */
 	public Order writeExcel(Order order) {
 		File file = new File("./src/main/resources/excel/order.xlsx");
 		XSSFWorkbook workbook = null;
@@ -87,9 +105,9 @@ public class RWExcelOrder {
 				sheet = workbook.getSheetAt(0);
 				rownum = sheet.getLastRowNum() + 1;
 			} catch (FileNotFoundException e) {
-				logger.log(Level.INFO, "File not found");
+				LOGGER.log(Level.INFO, "File not found");
 			} catch (IOException e) {
-				logger.log(Level.INFO, "Input/Output exception happened");
+				LOGGER.log(Level.INFO, "Input/Output exception happened");
 			}
 		}
 
@@ -103,10 +121,10 @@ public class RWExcelOrder {
 
 		Cell cell3 = row.createCell(cellnum++);
 		cell3.setCellValue(order.getProdId());
-		
+
 		Cell cell4 = row.createCell(cellnum++);
 		cell4.setCellValue(order.getOrderDate());
-		
+
 		try {
 			file = new File("./src/main/resources/excel/order.xlsx");
 			FileOutputStream out = new FileOutputStream(file);
@@ -114,11 +132,17 @@ public class RWExcelOrder {
 			out.close();
 			return order;
 		} catch (Exception e) {
-			logger.log(Level.INFO, e.getMessage());
+			LOGGER.log(Level.INFO, e.getMessage());
 			return null;
 		}
 	}
 
+	/**
+	 * This method is used for canceling the order.
+	 * 
+	 * @param orderId
+	 * @return
+	 */
 	public String cancelOrder(String orderId) {
 		int removeRowIndex = 0;
 		String cancelledOrderId = null;
@@ -150,13 +174,19 @@ public class RWExcelOrder {
 			out.close();
 
 		} catch (FileNotFoundException e) {
-			logger.log(Level.INFO, e.getMessage());
+			LOGGER.log(Level.INFO, e.getMessage());
 		} catch (IOException e) {
-			logger.log(Level.INFO, e.getMessage());
+			LOGGER.log(Level.INFO, e.getMessage());
 		}
 		return cancelledOrderId;
 	}
 
+	/**
+	 * This method is used for removing an order.
+	 * 
+	 * @param sheet
+	 * @param rowIndex
+	 */
 	private void removeOrder(Sheet sheet, int rowIndex) {
 		int lastRowNum = sheet.getLastRowNum();
 		if (rowIndex >= 0 && rowIndex < lastRowNum) {
@@ -170,17 +200,29 @@ public class RWExcelOrder {
 		}
 	}
 
+	/**
+	 * This method is used for getting an order.
+	 * 
+	 * @param orderId
+	 * @return
+	 */
 	public Order getOrderById(String orderId) {
 		List<Order> orders = readExcel();
 		Order order = null;
-		for(Order o : orders) {
-			if(o.getOrderId().equalsIgnoreCase(orderId)) {
+		for (Order o : orders) {
+			if (o.getOrderId().equalsIgnoreCase(orderId)) {
 				order = o;
 			}
 		}
 		return order;
 	}
 
+	/**
+	 * This method is used for placing an order.
+	 * 
+	 * @param placeOrder
+	 * @return
+	 */
 	public String writeOrderExcel(Order placeOrder) {
 
 		int cellnum = 0;
@@ -190,21 +232,21 @@ public class RWExcelOrder {
 		int rownum = 0;
 		if (file.exists() == false) {
 			workbook = new XSSFWorkbook();
-			logger.log(Level.INFO, "coming inside if");
+			LOGGER.log(Level.INFO, "coming inside if");
 			sheet = workbook.createSheet("User Order Details");
 		} else {
-			logger.log(Level.INFO, "coming in else");
+			LOGGER.log(Level.INFO, "coming in else");
 			try (InputStream is = new FileInputStream(file)) {
 				workbook = new XSSFWorkbook(is);
 				sheet = workbook.getSheetAt(0);
 				rownum = sheet.getLastRowNum() + 1;
 			} catch (FileNotFoundException e) {
-				logger.log(Level.WARNING, "File not found");
+				LOGGER.log(Level.WARNING, "File not found");
 			} catch (IOException e) {
-				logger.log(Level.WARNING, "Input/Output exception happened");
+				LOGGER.log(Level.WARNING, "Input/Output exception happened");
 			}
 		}
-		logger.log(Level.INFO, "coming inside else");
+		LOGGER.log(Level.INFO, "coming inside else");
 		Row row = sheet.createRow(rownum++);
 		Cell cell = row.createCell(cellnum++);
 		cell.setCellValue(placeOrder.getOrderId());
@@ -218,9 +260,11 @@ public class RWExcelOrder {
 			FileOutputStream out = new FileOutputStream(file);
 			workbook.write(out);
 			out.close();
-			return "User Order Placed Successfully!!!The user with ID => "+ placeOrder.getUserID() + " has placed the Order with ID =>" + placeOrder.getOrderId() + " having the prodcut with ID => "+ placeOrder.getProdId();
+			return "User Order Placed Successfully!!!The user with ID => " + placeOrder.getUserID()
+					+ " has placed the Order with ID =>" + placeOrder.getOrderId() + " having the prodcut with ID => "
+					+ placeOrder.getProdId();
 		} catch (Exception e) {
-			logger.log(Level.WARNING, "Internal Server Error");
+			LOGGER.log(Level.WARNING, "Internal Server Error");
 			return "Internal Server Error";
 		}
 	}

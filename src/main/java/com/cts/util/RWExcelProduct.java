@@ -1,3 +1,9 @@
+/**
+ * This class is used to get the product information.
+ * 
+ * @author 764432
+ *
+ */
 package com.cts.util;
 
 import java.io.File;
@@ -25,7 +31,6 @@ import com.cts.model.Product;
 @Component
 public class RWExcelProduct {
 
-	
 	private int rownum;
 	private int cellnum;
 	File file;
@@ -37,6 +42,12 @@ public class RWExcelProduct {
 		file = new File("./src/main/resources/excel/product.xlsx");
 	}
 
+	/**
+	 * This method is used for adding an item into excel.
+	 * 
+	 * @param pro
+	 * @return
+	 */
 	public String addItemInExcel(Product pro) {
 		File file = new File(filePath);
 		XSSFWorkbook workbook = null;
@@ -76,6 +87,11 @@ public class RWExcelProduct {
 		}
 	}
 
+	/**
+	 * This method is used for reeading excel.
+	 * 
+	 * @return
+	 */
 	public List<Product> readExcel() {
 		FileInputStream fileInputStream = null;
 		ArrayList<Product> productList = null;
@@ -116,6 +132,12 @@ public class RWExcelProduct {
 		return productList;
 	}
 
+	/**
+	 * This method is used for removing an item from excel.
+	 * 
+	 * @param inputFilePath
+	 * @param id
+	 */
 	public void removeItemFromExcel(String inputFilePath, int id) {
 		int removeRowIndex = 0;
 		try {
@@ -152,6 +174,12 @@ public class RWExcelProduct {
 		}
 	}
 
+	/**
+	 * This method is used for removing a row from excel.
+	 * 
+	 * @param sheet
+	 * @param rowIndex
+	 */
 	public static void removeRow(Sheet sheet, int rowIndex) {
 		int lastRowNum = sheet.getLastRowNum();
 		if (rowIndex >= 0 && rowIndex < lastRowNum) {
@@ -165,6 +193,11 @@ public class RWExcelProduct {
 		}
 	}
 
+	/**
+	 * This method is used for getting all the product.
+	 * 
+	 * @return
+	 */
 	public List<Product> getAllProducts() {
 		FileInputStream fileInputStream = null;
 		ArrayList<Product> productList = null;
