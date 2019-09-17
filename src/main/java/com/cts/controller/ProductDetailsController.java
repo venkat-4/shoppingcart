@@ -26,7 +26,7 @@ import com.cts.service.ProductDetailsService;
 public class ProductDetailsController {
 
 	@Autowired
-	private ProductDetailsService serv;
+	private ProductDetailsService productDetailsService;
 	
 	@Autowired
 	private OrderService orderService;
@@ -34,7 +34,7 @@ public class ProductDetailsController {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@PostMapping
 	public ResponseEntity<String> addItem(@RequestBody Product product) {
-		String a = serv.addItem(product);
+		String a = productDetailsService.addItem(product);
 		if(a.contains("Product Added")) {
 			return new ResponseEntity(a, HttpStatus.OK);
 		} else {
@@ -45,7 +45,7 @@ public class ProductDetailsController {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@DeleteMapping(path="/{prodId}")
 	public ResponseEntity<String> removeItem(@PathVariable("prodId")String prodId){
-		String proId = serv.removeItem(prodId);
+		String proId = productDetailsService.removeItem(prodId);
 		if (proId == null) {
 			return new ResponseEntity("Product not found in the system", HttpStatus.NOT_FOUND);
 		} else {
@@ -56,14 +56,14 @@ public class ProductDetailsController {
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping
 	public ResponseEntity<List<Product>> getAllProducts() {
-		List<Product> products = serv.getAllProducts();
+		List<Product> products = productDetailsService.getAllProducts();
 		return new ResponseEntity(products, HttpStatus.OK);
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping("/{prodId}")
 	public ResponseEntity<Product> getProductById(@PathVariable("prodId") String prodId) {
-		Product product = serv.getProductById(prodId);
+		Product product = productDetailsService.getProductById(prodId);
 		if (product == null) {
 			return new ResponseEntity("Product not found", HttpStatus.NOT_FOUND);
 		} else {
