@@ -18,6 +18,7 @@ import com.cts.model.Order;
 import com.cts.model.Product;
 import com.cts.model.User;
 
+
 @RestController
 public class BuyProductController {
 
@@ -42,8 +43,8 @@ public class BuyProductController {
 			return response;
 		}
 		String[] arr = response.split(":");
-		final int one = 1;
-		if (arr.length >= one) {
+		int one1 = 1;
+		if (arr.length >= one1) {
 			userId = (String) Array.get(arr, 1);
 		}
 		Product product = new Product();
@@ -53,7 +54,8 @@ public class BuyProductController {
 		String productResponse = template.postForObject("http://localhost:9090/products", product, String.class);
 
 		String[] productarr = productResponse.split(":");
-		if (productarr.length >= 1) {
+		int oNe1 = 1;
+		if (productarr.length >= oNe1) {
 			productId = (String) Array.get(productarr, 1);
 		}
 
@@ -65,9 +67,13 @@ public class BuyProductController {
 		order.setOrderId("od-856429");
 		order.setProdId(getProduct.getProdId());
 
-		final String orderResponse = template.postForObject("http://localhost:9090/products/orders", order,
-				String.class);
-
-		return orderResponse;
+		/*
+		 * final String orderResponse =
+		 * template.postForObject("http://localhost:9090/products/orders",
+		 * order, String.class);
+		 * 
+		 * return orderResponse;
+		 */
+		return template.postForObject("http://localhost:9090/products/orders", order, String.class);
 	}
 }

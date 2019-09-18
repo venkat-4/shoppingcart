@@ -12,6 +12,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,8 +57,11 @@ public class ProductExcelFile {
 	public String addItemInExcel(String fileName, Product pro) {
 
 		try {
-			FileInputStream fileInput = new FileInputStream(new File(fileName));
-			Workbook workbook = new XSSFWorkbook(fileInput);
+			// FileInputStream fileInput = new FileInputStream(new
+			// File(fileName));
+
+			// Files.newInputStream(Paths.get(fileName));
+			Workbook workbook = new XSSFWorkbook(Files.newInputStream(Paths.get(fileName)));
 			Sheet sheet = workbook.getSheetAt(0);
 			rownum = sheet.getLastRowNum();
 
@@ -74,9 +79,12 @@ public class ProductExcelFile {
 			Cell cell3 = row.createCell(cellnum++);
 			cell3.setCellValue(pro.getPrice());
 
-			FileOutputStream out = new FileOutputStream(new File(fileName));
-			workbook.write(out);
-			out.close();
+			// FileOutputStream out = new FileOutputStream(new File(fileName));
+
+			// workbook.write(out);
+			workbook.write(Files.newOutputStream((Paths.get(fileName))));
+			// out.close();
+			workbook.close();
 			return "Product Added Successfully,Product Id:  " + pro.getProdId();
 
 		} catch (IOException e) {
@@ -99,8 +107,11 @@ public class ProductExcelFile {
 		int removedRowIndex = 0;
 		try {
 
-			FileInputStream fileInputStream = new FileInputStream(new File(inputFilePath));
-			Workbook workbook = new XSSFWorkbook(fileInputStream);
+			// FileInputStream fileInputStream = new FileInputStream(new
+			// File(inputFilePath));
+
+			// Workbook workbook = new XSSFWorkbook(fileInputStream);
+			Workbook workbook = new XSSFWorkbook(Files.newInputStream(Paths.get(inputFilePath)));
 			Sheet dataSheet = workbook.getSheetAt(0);
 			Iterator<Row> iterator = dataSheet.iterator();
 
@@ -125,10 +136,13 @@ public class ProductExcelFile {
 			}
 			removeRow(dataSheet, removedRowIndex);
 			File file = new File(inputFilePath);
-			OutputStream outputStream = new FileOutputStream(file);
-			workbook.write(outputStream);
-			outputStream.flush();
-			outputStream.close();
+			// OutputStream outputStream = new FileOutputStream(file);
+			workbook.write(Files.newOutputStream((Paths.get(inputFilePath))));
+			// workbook.write(outputStream);
+
+			// outputStream.flush();
+			// outputStream.close();
+			workbook.close();
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

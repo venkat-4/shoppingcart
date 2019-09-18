@@ -6,10 +6,9 @@
  */
 package com.cts.util;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Iterator;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -45,8 +44,10 @@ public class RWExcelFileAuth {
 		User userExcel = new User();
 		try {
 
-			FileInputStream excelFile = new FileInputStream(new File(inputFilePath));
-			Workbook workbook = new XSSFWorkbook(excelFile);
+			// FileInputStream excelFile = new FileInputStream(new
+			// File(inputFilePath));
+			// Workbook workbook = new XSSFWorkbook(excelFile);
+			Workbook workbook = new XSSFWorkbook(Files.newInputStream(Paths.get(inputFilePath)));
 			Sheet datatypeSheet = workbook.getSheetAt(0);
 			Iterator<Row> iterator = datatypeSheet.iterator();
 
@@ -73,12 +74,9 @@ public class RWExcelFileAuth {
 							if (columnIndex == 3) {
 								userExcel.setPassword(currentCell.getStringCellValue());
 							}
-							if (user.getUserId().equals(userExcel.getUserId())
-									&& user.getPassword().equals(userExcel.getPassword())) {
-
+							if (user.getUserId().equals(userExcel.getUserId()) && user.getPassword().equals(userExcel.getPassword())) {
 								response = "User Looged in sucessfully";
 								break;
-
 							}
 						}
 					} else if (currentCell.getCellTypeEnum() == CellType.NUMERIC) {
@@ -105,8 +103,10 @@ public class RWExcelFileAuth {
 	public String writeExcel(User user, String fileName) {
 
 		try {
-			FileInputStream fileInput = new FileInputStream(new File(fileName));
-			Workbook workbook = new XSSFWorkbook(fileInput);
+			// FileInputStream fileInput = new FileInputStream(new
+			// File(fileName));
+			// Workbook workbook = new XSSFWorkbook(fileInput);
+			Workbook workbook = new XSSFWorkbook(Files.newInputStream(Paths.get(fileName)));
 			Sheet sheet = workbook.getSheetAt(0);
 			rownum = sheet.getLastRowNum();
 
@@ -127,9 +127,11 @@ public class RWExcelFileAuth {
 			Cell cell4 = row.createCell(cellnum++);
 			cell4.setCellValue(user.getPassword());
 
-			FileOutputStream out = new FileOutputStream(new File(fileName));
-			workbook.write(out);
-			out.close();
+			// FileOutputStream out = new FileOutputStream(new File(fileName));
+			// workbook.write(out);
+			// out.close();
+			workbook.write(Files.newOutputStream((Paths.get(fileName))));
+			workbook.close();
 			return "User Registered Successfully";
 
 		} catch (IOException e) {
