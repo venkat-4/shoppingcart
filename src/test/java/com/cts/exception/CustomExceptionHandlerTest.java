@@ -1,9 +1,9 @@
 package com.cts.exception;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.junit.Assert.assertThat;
 import static org.testng.Assert.assertNotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -14,6 +14,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -22,12 +24,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class CustomExceptionHandlerTest extends ResponseEntityExceptionHandler {
 
 	@Mock
-	public CustomExceptionHandler customExceptionHandler;
-
-	@Mock
 	WebRequest webRequest;
 
-	CustomExceptionHandler customExceptionHandlerReal;
+	@Mock
+	BindingResult br;
+	@Mock
+	public CustomExceptionHandler customExceptionHandler;
 	@Mock
 	MethodArgumentNotValidException methodArgumentNotValidException;
 
@@ -36,19 +38,19 @@ public class CustomExceptionHandlerTest extends ResponseEntityExceptionHandler {
 	@Before
 	public void setUp() {
 		mockResponse = null;
-		customExceptionHandlerReal = new CustomExceptionHandler();
+		customExceptionHandler = new CustomExceptionHandler();
 	}
 
 	@Test
 	public void handleAllExceptionTest() {
-		ResponseEntity<Object> res = customExceptionHandlerReal.handleAllException(new Exception(), webRequest);
+		ResponseEntity<Object> res = customExceptionHandler.handleAllException(new Exception(), webRequest);
 
 		assertNotNull(res);
 	}
 
 	@Test
 	public void handleInternalServerExceptionTest() {
-		ResponseEntity<Object> res = customExceptionHandlerReal
+		ResponseEntity<Object> res = customExceptionHandler
 				.handleInternalServerException(new InternalServerError("InternalServerException"), webRequest);
 
 		assertNotNull(res);
@@ -56,23 +58,24 @@ public class CustomExceptionHandlerTest extends ResponseEntityExceptionHandler {
 
 	@Test
 	public void handleRecordNotFoundExceptionTest() {
-		ResponseEntity<Object> res = customExceptionHandlerReal
+		ResponseEntity<Object> res = customExceptionHandler
 				.handleRecordNotFoundException(new RecordNotFoundException("RecordNotFoundException"), webRequest);
 
 		assertNotNull(res);
 	}
 
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@Test
-	public void methodArgumentNotValid() {
-		mockResponse = new ResponseEntity(HttpStatus.BAD_REQUEST);
-		Mockito.doReturn(mockResponse).when(customExceptionHandler).handleMethodArgumentNotValid(Mockito.any(),
-				Mockito.any(HttpHeaders.class), Mockito.any(HttpStatus.class), Mockito.any());
+	public void methodArgumentNotValidTest() {
 
-		ResponseEntity<Object> ErrorResponse = customExceptionHandler.handleMethodArgumentNotValid(null,
-				HttpHeaders.EMPTY, HttpStatus.BAD_REQUEST, null);
-		assertThat(ErrorResponse, notNullValue());
-		assertThat(ErrorResponse.getStatusCode(), is(HttpStatus.BAD_REQUEST));
+		List<ObjectError> errors = new ArrayList<>();
+		errors.add(new ObjectError("", ""));
+		Mockito.doReturn(br).when(methodArgumentNotValidException).getBindingResult();
+		Mockito.doReturn(errors).when(br).getAllErrors();
+
+		ResponseEntity<Object> res = customExceptionHandler.handleMethodArgumentNotValid(
+				methodArgumentNotValidException, HttpHeaders.EMPTY, HttpStatus.BAD_REQUEST, webRequest);
+		assertNotNull(res);
+
 	}
 
 }
