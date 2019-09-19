@@ -21,7 +21,13 @@ import com.cts.model.User;
 
 @RestController
 public class BuyProductController {
-
+	
+/**
+ * The RestTemplate offers templates for common scenarios by HTTP method, in
+ * addition to the generalized {@code exchange} and {@code execute} methods that
+ * support of less frequent cases.
+ * 
+ */
 	private RestTemplate template;
 
 	/**

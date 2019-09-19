@@ -13,6 +13,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -58,8 +60,12 @@ public class RWExcelProduct {
 			workbook = new XSSFWorkbook();
 			sheet = workbook.createSheet("product");
 		} else {
-			try (InputStream is = new FileInputStream(file)) {
-				workbook = new XSSFWorkbook(is);
+			/*
+			 * try (InputStream is = new FileInputStream(file)) { workbook = new
+			 * XSSFWorkbook(is); sheet = workbook.getSheetAt(0);
+			 */
+			try {
+				workbook = new XSSFWorkbook(Files.newInputStream(Paths.get(filePath)));
 				sheet = workbook.getSheetAt(0);
 				rownum = sheet.getLastRowNum() + 1;
 			} catch (FileNotFoundException e) {
@@ -77,9 +83,12 @@ public class RWExcelProduct {
 		Cell cell3 = row.createCell(cellnum++);
 		cell3.setCellValue(pro.getPrice());
 		try {
-			FileOutputStream out = new FileOutputStream(filePath);
-			workbook.write(out);
-			out.close();
+			/*
+			 * FileOutputStream out = new FileOutputStream(filePath);
+			 * workbook.write(out); out.close();
+			 */
+			workbook.write(Files.newOutputStream((Paths.get(filePath))));
+			workbook.close();
 			return "Item added Successfully";
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -93,13 +102,17 @@ public class RWExcelProduct {
 	 * @return
 	 */
 	public List<Product> readExcel() {
+		Workbook workbook = null;
 		FileInputStream fileInputStream = null;
 		ArrayList<Product> productList = null;
 		try {
-			fileInputStream = new FileInputStream(filePath);
-			File file = new File(filePath);
-			XSSFWorkbook workbook = new XSSFWorkbook(file);
-			XSSFSheet sheet = workbook.getSheetAt(0);
+			/*
+			 * fileInputStream = new FileInputStream(filePath); File file = new
+			 * File(filePath); XSSFWorkbook workbook = new XSSFWorkbook(file);
+			 * XSSFSheet sheet = workbook.getSheetAt(0);
+			 */
+			workbook = new XSSFWorkbook(Files.newInputStream(Paths.get(filePath)));
+			Sheet sheet = workbook.getSheetAt(0);
 			productList = new ArrayList<>();
 			for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
 				Product product = new Product();
@@ -124,7 +137,8 @@ public class RWExcelProduct {
 			e.printStackTrace();
 		} finally {
 			try {
-				fileInputStream.close();
+				// fileInputStream.close();
+				workbook.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -141,8 +155,12 @@ public class RWExcelProduct {
 	public void removeItemFromExcel(String inputFilePath, int id) {
 		int removeRowIndex = 0;
 		try {
-			FileInputStream excelFile = new FileInputStream(new File(inputFilePath));
-			Workbook workbook = new XSSFWorkbook(excelFile);
+			/*
+			 * FileInputStream excelFile = new FileInputStream(new
+			 * File(inputFilePath)); Workbook workbook = new
+			 * XSSFWorkbook(excelFile);
+			 */
+			Workbook workbook = new XSSFWorkbook(Files.newInputStream(Paths.get(filePath)));
 			Sheet datatypeSheet = workbook.getSheetAt(0);
 			Iterator<Row> iterator = datatypeSheet.iterator();
 			while (iterator.hasNext()) {
@@ -162,11 +180,13 @@ public class RWExcelProduct {
 				}
 			}
 			removeRow(datatypeSheet, removeRowIndex);
-			File outWB = new File(inputFilePath);
-			OutputStream out = new FileOutputStream(outWB);
-			workbook.write(out);
-			out.flush();
-			out.close();
+			/*
+			 * File outWB = new File(inputFilePath); OutputStream out = new
+			 * FileOutputStream(outWB); workbook.write(out); out.flush();
+			 * out.close();
+			 */
+			workbook.write(Files.newOutputStream((Paths.get(filePath))));
+			workbook.close();
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -199,13 +219,17 @@ public class RWExcelProduct {
 	 * @return
 	 */
 	public List<Product> getAllProducts() {
+		Workbook workbook = null;
 		FileInputStream fileInputStream = null;
 		ArrayList<Product> productList = null;
 		try {
-			fileInputStream = new FileInputStream(new File(filePath));
-			File file = new File(filePath);
-			XSSFWorkbook workbook = new XSSFWorkbook(file);
-			XSSFSheet sheet = workbook.getSheetAt(0);
+			/*
+			 * fileInputStream = new FileInputStream(new File(filePath)); File
+			 * file = new File(filePath); XSSFWorkbook workbook = new
+			 * XSSFWorkbook(file); XSSFSheet sheet = workbook.getSheetAt(0);
+			 */
+			workbook = new XSSFWorkbook(Files.newInputStream(Paths.get(filePath)));
+			Sheet sheet = workbook.getSheetAt(0);
 			productList = new ArrayList<>();
 			for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
 				Product product = new Product();
@@ -229,7 +253,8 @@ public class RWExcelProduct {
 			e.printStackTrace();
 		} finally {
 			try {
-				fileInputStream.close();
+				// fileInputStream.close();
+				workbook.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

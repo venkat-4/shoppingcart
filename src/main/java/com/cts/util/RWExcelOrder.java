@@ -7,12 +7,10 @@
 package com.cts.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -42,13 +40,18 @@ public class RWExcelOrder {
 	 * @return
 	 */
 	public List<Order> readExcel() {
-		FileInputStream fileInputStream = null;
+		// FileInputStream fileInputStream = null;
 		ArrayList<Order> orderList = null;
+		Workbook workbook = null;
 		try {
-			fileInputStream = new FileInputStream(new File("./src/main/resources/excel/order.xlsx"));
-			File file = new File(filePath);
-			XSSFWorkbook workbook = new XSSFWorkbook(file);
-			XSSFSheet sheet = workbook.getSheetAt(0);
+			/*
+			 * fileInputStream = new FileInputStream(new
+			 * File("./src/main/resources/excel/order.xlsx")); File file = new
+			 * File(filePath); XSSFWorkbook workbook = new XSSFWorkbook(file);
+			 * XSSFSheet sheet = workbook.getSheetAt(0);
+			 */
+			workbook = new XSSFWorkbook(Files.newInputStream(Paths.get("./src/main/resources/excel/order.xlsx")));
+			Sheet sheet = workbook.getSheetAt(0);
 			orderList = new ArrayList<>();
 			for (int i = sheet.getFirstRowNum(); i <= sheet.getLastRowNum(); i++) {
 				Order order = new Order();
@@ -76,7 +79,8 @@ public class RWExcelOrder {
 			e.printStackTrace();
 		} finally {
 			try {
-				fileInputStream.close();
+				// fileInputStream.close();
+				workbook.close();
 			} catch (IOException e) {
 				LOGGER.log(Level.INFO, e.getMessage());
 			}
@@ -100,8 +104,12 @@ public class RWExcelOrder {
 			workbook = new XSSFWorkbook();
 			sheet = workbook.createSheet("order");
 		} else {
-			try (InputStream is = new FileInputStream(file)) {
-				workbook = new XSSFWorkbook(is);
+			/*
+			 * try (InputStream is = new FileInputStream(file)) { workbook = new
+			 * XSSFWorkbook(is);
+			 */
+			try {
+				workbook = new XSSFWorkbook(Files.newInputStream(Paths.get("./src/main/resources/excel/order.xlsx")));
 				sheet = workbook.getSheetAt(0);
 				rownum = sheet.getLastRowNum() + 1;
 			} catch (FileNotFoundException e) {
@@ -126,10 +134,13 @@ public class RWExcelOrder {
 		cell4.setCellValue(order.getOrderDate());
 
 		try {
-			file = new File("./src/main/resources/excel/order.xlsx");
-			FileOutputStream out = new FileOutputStream(file);
-			workbook.write(out);
-			out.close();
+			/*
+			 * file = new File("./src/main/resources/excel/order.xlsx");
+			 * FileOutputStream out = new FileOutputStream(file);
+			 * workbook.write(out); out.close();
+			 */
+			workbook.write(Files.newOutputStream((Paths.get("./src/main/resources/excel/order.xlsx"))));
+			workbook.close();
 			return order;
 		} catch (Exception e) {
 			LOGGER.log(Level.INFO, e.getMessage());
@@ -147,8 +158,13 @@ public class RWExcelOrder {
 		int removeRowIndex = 0;
 		String cancelledOrderId = null;
 		try {
-			FileInputStream excelFile = new FileInputStream(new File("./src/main/resources/excel/order.xlsx"));
-			Workbook workbook = new XSSFWorkbook(excelFile);
+			/*
+			 * FileInputStream excelFile = new FileInputStream(new
+			 * File("./src/main/resources/excel/order.xlsx")); Workbook workbook
+			 * = new XSSFWorkbook(excelFile);
+			 */
+			Workbook workbook = new XSSFWorkbook(
+					Files.newInputStream(Paths.get("./src/main/resources/excel/order.xlsx")));
 			Sheet sheet = workbook.getSheetAt(0);
 			Iterator<Row> iterator = sheet.iterator();
 			while (iterator.hasNext()) {
@@ -167,12 +183,13 @@ public class RWExcelOrder {
 				}
 			}
 			removeOrder(sheet, removeRowIndex);
-			File outFile = new File(filePath);
-			OutputStream out = new FileOutputStream(outFile);
-			workbook.write(out);
-			out.flush();
-			out.close();
-
+			/*
+			 * File outFile = new File(filePath); OutputStream out = new
+			 * FileOutputStream(outFile); workbook.write(out); out.flush();
+			 * out.close();
+			 */
+			workbook.write(Files.newOutputStream((Paths.get("./src/main/resources/excel/order.xlsx"))));
+			workbook.close();
 		} catch (FileNotFoundException e) {
 			LOGGER.log(Level.INFO, e.getMessage());
 		} catch (IOException e) {
@@ -236,8 +253,12 @@ public class RWExcelOrder {
 			sheet = workbook.createSheet("User Order Details");
 		} else {
 			LOGGER.log(Level.INFO, "coming in else");
-			try (InputStream is = new FileInputStream(file)) {
-				workbook = new XSSFWorkbook(is);
+			/*
+			 * try (InputStream is = new FileInputStream(file)) { workbook = new
+			 * XSSFWorkbook(is); sheet = workbook.getSheetAt(0);
+			 */
+			try {
+				workbook = new XSSFWorkbook(Files.newInputStream(Paths.get("./src/main/resources/excel/order.xlsx")));
 				sheet = workbook.getSheetAt(0);
 				rownum = sheet.getLastRowNum() + 1;
 			} catch (FileNotFoundException e) {
@@ -257,9 +278,12 @@ public class RWExcelOrder {
 		Cell cell4 = row.createCell(cellnum++);
 		cell4.setCellValue(placeOrder.getOrderDate());
 		try {
-			FileOutputStream out = new FileOutputStream(file);
-			workbook.write(out);
-			out.close();
+			/*
+			 * FileOutputStream out = new FileOutputStream(file);
+			 * workbook.write(out); out.close();
+			 */
+			workbook.write(Files.newOutputStream((Paths.get("./src/main/resources/excel/order.xlsx"))));
+			workbook.close();
 			return "User Order Placed Successfully!!!The user with ID => " + placeOrder.getUserID()
 					+ " has placed the Order with ID =>" + placeOrder.getOrderId() + " having the prodcut with ID => "
 					+ placeOrder.getProdId();

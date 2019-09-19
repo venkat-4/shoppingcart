@@ -1,3 +1,4 @@
+
 package com.cts.config;
 
 import org.springframework.context.annotation.Bean;
@@ -9,9 +10,27 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 import static springfox.documentation.builders.PathSelectors.regex;
 
+/**
+ * ** Indicates that Swagger support should be enabled.
+ *
+ * This should be applied to a Spring java config and should have an
+ * accompanying '@Configuration' annotation.
+ *
+ * Loads all required beans defined in @see SpringSwaggerConfig
+ *
+ * *
+ * 
+ * @author 788599
+ *
+ */
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
+	/**
+	 * Creates a new instance of {@code SimplePluginMetadata.
+	 * 
+	 * @return
+	 */
 	@Bean
 	public Docket productApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
