@@ -1,8 +1,6 @@
 /**
  * This class is used to get the product information.
- * 
- * @author 764432
- *
+ * @author
  */
 package com.cts.controller;
 
@@ -29,6 +27,7 @@ import com.cts.service.ProductDetailsService;
 
 @RestController
 @RequestMapping("/products")
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class ProductDetailsController {
 
 	@Autowired
@@ -55,7 +54,7 @@ public class ProductDetailsController {
 	 * @param product
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+
 	@PostMapping
 	public ResponseEntity<String> addItem(@RequestBody Product product) {
 		String addItemResponse = productDetailsService.addItem(product);
@@ -72,7 +71,6 @@ public class ProductDetailsController {
 	 * @param prodId
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@DeleteMapping(path = "/{prodId}")
 	public ResponseEntity<String> removeItem(@PathVariable("prodId") final String prodId) {
 		String proId = productDetailsService.removeItem(prodId);
@@ -88,7 +86,6 @@ public class ProductDetailsController {
 	 * 
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping
 	public ResponseEntity<List<Product>> getAllProducts() {
 		List<Product> products = productDetailsService.getAllProducts();
@@ -101,7 +98,6 @@ public class ProductDetailsController {
 	 * @param prodId
 	 * @return
 	 */
-	@SuppressWarnings({ "rawtypes", "unchecked" })
 	@GetMapping("/{prodId}")
 	public ResponseEntity<Product> getProductById(@PathVariable("prodId") final String prodId) {
 		Product product = productDetailsService.getProductById(prodId);
