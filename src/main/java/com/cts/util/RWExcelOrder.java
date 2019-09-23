@@ -71,7 +71,6 @@ public class RWExcelOrder {
 				}
 				orderList.add(order);
 			}
-			return orderList;
 		} catch (Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -105,9 +104,9 @@ public class RWExcelOrder {
 				sheet = workbook.getSheetAt(0);
 				rownum = sheet.getLastRowNum() + 1;
 			} catch (FileNotFoundException e) {
-				LOGGER.log(Level.INFO, "File not found");
+				System.err.println("File not found");
 			} catch (IOException e) {
-				LOGGER.log(Level.INFO, "Input/Output exception happened");
+				System.err.println("Input/Output exception happened");
 			}
 		}
 
