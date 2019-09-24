@@ -39,6 +39,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		List<String> details = new ArrayList<>();
 		details.add(exception.getLocalizedMessage());
 		ErrorResponse error = new ErrorResponse("Server exception ocurred", details);
+		System.out.println("ErrorResponse :" +error);//git
 		return new ResponseEntity(error, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
@@ -84,6 +85,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 			details.add(error.getDefaultMessage());
 		}
 		ErrorResponse error = new ErrorResponse("alidation failed", details);
+		System.out.println("ErrorResponse :" +error);//git
 		return new ResponseEntity(error, HttpStatus.BAD_REQUEST);
 	}
 }

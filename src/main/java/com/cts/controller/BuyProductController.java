@@ -57,7 +57,7 @@ public class BuyProductController {
 		product.setProdName("nokia");
 		product.setPrice("999");
 		String productResponse = template.postForObject("http://localhost:9090/products", product, String.class);
-
+		System.out.println("Product :"+productResponse);//git
 		String[] productarr = productResponse.split(":");
 		int oNe1 = 1;
 		if (productarr.length >= oNe1) {
@@ -71,7 +71,7 @@ public class BuyProductController {
 		order.setOrderDate("2019-Sep-13");
 		order.setOrderId("od-856429");
 		order.setProdId(getProduct.getProdId());
-
+		System.out.println("Order :"+order);//git
 		/*
 		 * final String orderResponse =
 		 * template.postForObject("http://localhost:9090/products/orders",
