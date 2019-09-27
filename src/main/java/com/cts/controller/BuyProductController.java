@@ -41,7 +41,9 @@ public class BuyProductController {
 		String userId = "";
 		String productId = "";
 		template = new RestTemplate();
-
+		/**
+		 * getting  response info
+		 */
 		String response = template.postForObject("http://localhost:9090/auth/login", user, String.class);
 
 		if (response.contains("invalid")) {
@@ -52,6 +54,9 @@ public class BuyProductController {
 		if (arr.length >= one1) {
 			userId = (String) Array.get(arr, 1);
 		}
+		/**
+		 * added product info
+		 */
 		Product product = new Product();
 		product.setProdId("102");
 		product.setProdName("nokia");
@@ -65,7 +70,9 @@ public class BuyProductController {
 		}
 
 		Product getProduct = template.getForObject("http://localhost:9090/products/" + productId, Product.class);
-
+		/**
+		 * added order info
+		 */
 		Order order = new Order();
 		order.setUserID(userId);
 		order.setOrderDate("2019-Sep-13");
