@@ -8,6 +8,7 @@ package com.cts.controller;
 
 import java.lang.reflect.Array;
 
+import org.apache.commons.collections4.bag.SynchronizedSortedBag;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -37,13 +38,12 @@ public class BuyProductController {
 	 */
 	@RequestMapping(value = "/placeorder", method = RequestMethod.POST)
 	public String placeOrder(@RequestBody final User user) {
-
 		String userId = "";
 		String productId = "";
 		template = new RestTemplate();
 
 		String response = template.postForObject("http://localhost:9090/auth/login", user, String.class);
-
+		System.out.println("response :"+response);//git
 		if (response.contains("invalid")) {
 			return response;
 		}
@@ -56,8 +56,9 @@ public class BuyProductController {
 		product.setProdId("102");
 		product.setProdName("nokia");
 		product.setPrice("999");
+		System.out.println("Product :"+product);//git
 		String productResponse = template.postForObject("http://localhost:9090/products", product, String.class);
-
+		System.out.println("productResponse :"+productResponse);//git
 		String[] productarr = productResponse.split(":");
 		int oNe1 = 1;
 		if (productarr.length >= oNe1) {
@@ -65,13 +66,13 @@ public class BuyProductController {
 		}
 
 		Product getProduct = template.getForObject("http://localhost:9090/products/" + productId, Product.class);
-
+		System.out.println("getProduct :"+getProduct);//git
 		Order order = new Order();
 		order.setUserID(userId);
 		order.setOrderDate("2019-Sep-13");
 		order.setOrderId("od-856429");
 		order.setProdId(getProduct.getProdId());
-
+		System.out.println("Order :"+order);//git
 		/*
 		 * final String orderResponse =
 		 * template.postForObject("http://localhost:9090/products/orders",
