@@ -67,6 +67,10 @@ public class OrderController {
 	@GetMapping("/cancel/{orderId}")
 	public ResponseEntity<Object> cancelOrder(@PathVariable("orderId") final String orderId) {
 		String cancelledOrderId = orderService.cancelOrder(orderId);
+		System.out.println("cancelOrder:"+cancelledOrderId);//git
+		/**
+		 * checking order was null get error massage 
+		 */
 		if (cancelledOrderId == null) {
 			return new ResponseEntity("Order not found in the system", HttpStatus.NOT_FOUND);
 		} else {
@@ -83,6 +87,7 @@ public class OrderController {
 	@GetMapping
 	public ResponseEntity<List<Order>> getAllOrders() {
 		List<Order> orders = orderService.getAllOrders();
+		System.out.println("getallorders:"+orders);//git
 		return new ResponseEntity(orders, HttpStatus.OK);
 	}
 
@@ -96,6 +101,7 @@ public class OrderController {
 	@GetMapping("/{orderId}")
 	public ResponseEntity<Order> getOrderById(@PathVariable("orderId")final String orderId) {
 		Order order = orderService.getOrderById(orderId);
+		System.out.println("order:"+order);//git
 		if (order == null) {
 			return new ResponseEntity(null, HttpStatus.NOT_FOUND);
 		} else {
