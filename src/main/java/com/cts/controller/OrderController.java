@@ -68,6 +68,7 @@ public class OrderController {
 	@GetMapping("/cancel/{orderId}")
 	public ResponseEntity<Object> cancelOrder(@PathVariable("orderId") final String orderId) {
 		String cancelledOrderId = orderService.cancelOrder(orderId);
+		System.out.println("cancelledOrderId :"+cancelledOrderId);
 		if (cancelledOrderId == null) {
 			return new ResponseEntity("Order not found in the system", HttpStatus.NOT_FOUND);
 		} else {
