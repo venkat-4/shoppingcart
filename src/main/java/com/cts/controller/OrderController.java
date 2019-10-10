@@ -49,6 +49,7 @@ public class OrderController {
 	@PostMapping
 	public ResponseEntity<Object> placeOrder(@RequestBody final Order order) {
 		Order savedOrder = orderService.placeOrder(order);
+		System.out.println("saveOrder :"+savedOrder);
 		if (savedOrder == null) {
 			return new ResponseEntity("Unable to place order", HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
