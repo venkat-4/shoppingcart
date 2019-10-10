@@ -96,6 +96,7 @@ public class OrderController {
 	@GetMapping("/{orderId}")
 	public ResponseEntity<Order> getOrderById(@PathVariable("orderId")final String orderId) {
 		Order order = orderService.getOrderById(orderId);
+		System.out.println("Order:"+ order);//git
 		if (order == null) {
 			return new ResponseEntity(null, HttpStatus.NOT_FOUND);
 		} else {
